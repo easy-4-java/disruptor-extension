@@ -16,7 +16,6 @@
 package com.lmax.disruptor.event.translator;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
-import com.lmax.disruptor.event.DisruptorBindEvent;
 import com.lmax.disruptor.event.DisruptorEvent;
 import com.lmax.disruptor.util.StringUtils;
 
