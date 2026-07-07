@@ -16,20 +16,19 @@ import com.lmax.disruptor.util.StringUtils;
 public class DisruptorEvent extends EventObject {
 
 	/** System time when the event happened */
-	private final long timestamp;
-
+	protected final long timestamp;
 	/** Event Topic */
-	public String topic;
+	protected String topic;
 	/** Event Tag */
-	private String tag;
+	protected String tag;
 	/** Event namespace */
-	public String namespace;
+	protected String namespace;
 	/** Event messageId */
-	public String messageId;
+	protected String messageId;
 	/** Event payload */
-	private Object payload;
+	protected Object payload;
 	/** Event sequence */
-	public long sequence;
+	protected long sequence;
 
 	/**
 	 * Create a new ConsumeEvent.
@@ -48,14 +47,26 @@ public class DisruptorEvent extends EventObject {
 		this.timestamp = System.currentTimeMillis();
 	}
 
+	/**
+	 * 物理路由键：{@code namespace.topic[.tag]}。
+	 * <h3>路由模型</h3>
+	 * <pre>
+	 *   namespace.topic.tag
+	 *   └───┬───┘ └─┬─┘ └┬┘
+	 *    环境隔离 业务分类 细分标签
+	 * </pre>
+	 * <ul>
+	 *   <li>{@code namespace} —— 命名空间，用于多环境 / 多租户隔离</li>
+	 *   <li>{@code topic} —— 消费线程隔离维度，不同 topic 走不同消费线程池</li>
+	 *   <li>{@code tag} —— 同 topic 下共享消费线程，做消息过滤</li>
+	 * </ul>
+	 */
 	public String getRouteExpression() {
-
 		String base = (namespace == null ? "" : namespace) + "." + (topic == null ? "" : topic);
 		if (tag == null || StringUtils.isBlank(tag) || "*".equals(tag)) {
 			return base;
 		}
 		return base + "." + tag;
-
 	}
 	
 	@Override

@@ -28,7 +28,7 @@ public class DisruptorEventOneArgTranslator implements EventTranslatorOneArg<Dis
 		event.setTag(bind.getTag());
 		event.setMessageId(StringUtils.hasText(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
 		event.setPayload(bind.getPayload());
-		event.sequence = sequence;
+		event.setSequence(sequence);
 	}
 
 }
