@@ -23,7 +23,6 @@ public class DisruptorEventOneArgTranslator implements EventTranslatorOneArg<Dis
 
 	@Override
 	public void translateTo(DisruptorEvent event, long sequence, DisruptorEvent bind) {
-		event.setSource(bind.getSource());
 		event.setTopic(bind.getTopic());
 		event.setNamespace(bind.getNamespace());
 		event.setTag(bind.getTag());
