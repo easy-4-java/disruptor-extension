@@ -22,9 +22,9 @@ public class DisruptorEventThreeArgTranslator implements EventTranslatorThreeArg
 
 	@Override
 	public void translateTo(DisruptorEvent dtEevent, long sequence, String event, String tag, String key) {
-		dtEevent.setEvent(event);
+		dtEevent.setTopic(event);
 		dtEevent.setTag(tag);
-		dtEevent.setKey(key);
+		dtEevent.setMessageId(key);
 	}
 	
 }

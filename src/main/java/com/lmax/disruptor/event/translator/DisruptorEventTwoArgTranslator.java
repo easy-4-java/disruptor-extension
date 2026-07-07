@@ -22,9 +22,9 @@ public class DisruptorEventTwoArgTranslator implements EventTranslatorTwoArg<Dis
 
 	@Override
 	public void translateTo(DisruptorEvent dtEevent, long sequence, String event, String tag) {
-		dtEevent.setEvent(event);
+		dtEevent.setTopic(event);
 		dtEevent.setTag(tag);
-		dtEevent.setKey(String.valueOf(sequence));
+		dtEevent.setMessageId(String.valueOf(sequence));
 	}
 	
 }
