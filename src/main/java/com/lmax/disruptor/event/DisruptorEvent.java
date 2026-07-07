@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.EventObject;
-import java.util.StringJoiner;
+
+import com.lmax.disruptor.util.StringUtils;
 
 /**
  * 事件(Event) 就是通过 Disruptor 进行交换的数据类型。
@@ -50,13 +51,11 @@ public class DisruptorEvent extends EventObject {
 	public String getRouteExpression() {
 
 		String base = (namespace == null ? "" : namespace) + "." + (topic == null ? "" : topic);
-		if (tag == null || StrKit.isBlank(tag) || "*".equals(tag)) {
+		if (tag == null || StringUtils.isBlank(tag) || "*".equals(tag)) {
 			return base;
 		}
 		return base + "." + tag;
 
-		return new StringJoiner("/").add(getTopic()).add(getTag()).add(getKey()).toString();
-		
 	}
 	
 	@Override
