@@ -1,23 +1,43 @@
 package com.lmax.disruptor.event;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.EventObject;
+import java.util.StringJoiner;
 
 /**
  * 事件(Event) 就是通过 Disruptor 进行交换的数据类型。
  */
-public abstract class DisruptorEvent extends EventObject {
+@Getter
+@Setter
+public class DisruptorEvent extends EventObject {
 
 	/** System time when the event happened */
 	private final long timestamp;
-	/** Event Name */
-	private String event;
+
+	/** Event Topic */
+	public String topic;
 	/** Event Tag */
 	private String tag;
-	/** Event Keys */
-	private String key;
-	/** Event body */
-	private Object body;
-	
+	/** Event namespace */
+	public String namespace;
+	/** Event messageId */
+	public String messageId;
+	/** Event payload */
+	private Object payload;
+	/** Event sequence */
+	public long sequence;
+
+	/**
+	 * Create a new ConsumeEvent.
+	 */
+	public DisruptorEvent() {
+		super(Thread.currentThread());
+		this.timestamp = System.currentTimeMillis();
+	}
+
 	/**
 	 * Create a new ConsumeEvent.
 	 * @param source the object on which the event initially occurred (never {@code null})
@@ -27,60 +47,21 @@ public abstract class DisruptorEvent extends EventObject {
 		this.timestamp = System.currentTimeMillis();
 	}
 
-	/**
-	 * Return the system time in milliseconds when the event happened.
-	 * @return system time in milliseconds 
-	 */
-	public final long getTimestamp() {
-		return this.timestamp;
-	}
-	
 	public String getRouteExpression() {
-		return new StringBuilder("/").append(getEvent()).append("/").append(getTag()).append("/")
-				.append(getKey()).toString();
+
+		String base = (namespace == null ? "" : namespace) + "." + (topic == null ? "" : topic);
+		if (tag == null || StrKit.isBlank(tag) || "*".equals(tag)) {
+			return base;
+		}
+		return base + "." + tag;
+
+		return new StringJoiner("/").add(getTopic()).add(getTag()).add(getKey()).toString();
 		
-	}
-	
-	public void setSource(Object source){
-		this.source = source;
-	}
-
-	public String getEvent() {
-		return event;
-	}
-
-	public void setEvent(String event) {
-		this.event = event;
-	}
-
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
-	public Object getBody() {
-		return body;
-	}
-
-	public void setBody(Object body) {
-		this.body = body;
 	}
 	
 	@Override
 	public String toString() {
-		return new StringBuilder("DisruptorEvent [event :").append(getEvent()).append(",tag :").append(getTag()).append(", key :")
-				.append(getKey()).append("]").toString();
+		return "DisruptorEvent [topic :" + getTopic() + ",namespace :" + getNamespace() + ",tag :" + getTag() + ", messageId :" +  getMessageId() + "]";
 	}
 	
 }
