@@ -17,7 +17,6 @@ package com.lmax.disruptor;
 
 
 import com.lmax.disruptor.dsl.Disruptor;
-import com.lmax.disruptor.event.DisruptorBindEvent;
 import com.lmax.disruptor.event.DisruptorEvent;
 
 public class DisruptorTemplate {
@@ -30,26 +29,26 @@ public class DisruptorTemplate {
 		this.oneArgEventTranslator = oneArgEventTranslator;
 	}
 
-	public void publishEvent(DisruptorBindEvent event) {
+	public void publishEvent(DisruptorEvent event) {
 		disruptor.publishEvent(oneArgEventTranslator, event);
 	}
 	
-	public void publishEvent(String event, String tag, Object body) {
-		DisruptorBindEvent bindEvent = new DisruptorBindEvent();
-		bindEvent.setEvent(event);
+	public void publishEvent(String topic, String tag, Object payload) {
+		DisruptorEvent bindEvent = new DisruptorEvent();
+		bindEvent.setTopic(topic);
 		bindEvent.setTag(tag);
-		bindEvent.setBody(body);
+		bindEvent.setPayload(payload);
 		disruptor.publishEvent(oneArgEventTranslator, bindEvent);
 	}
 	
-	public void publishEvent(String event, String tag, String key, Object body) {
-		DisruptorBindEvent bindEvent = new DisruptorBindEvent();
-		bindEvent.setEvent(event);
+	public void publishEvent(String topic, String namespace, String tag, Object payload) {
+		DisruptorEvent bindEvent = new DisruptorEvent();
+		bindEvent.setTopic(topic);
+		bindEvent.setNamespace(namespace);
 		bindEvent.setTag(tag);
-		bindEvent.setKey(key);
-		bindEvent.setBody(body);
+		bindEvent.setPayload(payload);
+		bindEvent.setMessageId(String.valueOf(System.currentTimeMillis()));
 		disruptor.publishEvent(oneArgEventTranslator, bindEvent);
 	}
-	
-	
+
 }

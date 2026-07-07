@@ -15,33 +15,13 @@
  */
 package com.lmax.disruptor.event;
 
-@SuppressWarnings("serial")
-public class DisruptorBindEvent extends DisruptorEvent {
+import com.lmax.disruptor.EventFactory;
 
-	/**
-	 * 当前事件绑定的数据对象
-	 */
-	protected Object bind;
+public class DisruptorEventFactory implements EventFactory<DisruptorEvent> {
 
-	public DisruptorBindEvent() {
-		super(null);
-	}
-	
-	public DisruptorBindEvent(Object source) {
-		super(source);
+	@Override
+	public DisruptorEvent newInstance() {
+		return new DisruptorEvent(Thread.currentThread());
 	}
 
-	public DisruptorBindEvent(Object source, Object bind) {
-		super(source);
-		this.bind = bind;
-	}
-
-	public Object getBind() {
-		return bind;
-	}
-	
-	public void bind(Object bind) {
-		this.bind = bind;
-	}
-	
 }
