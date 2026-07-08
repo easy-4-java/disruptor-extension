@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +18,9 @@ import com.lmax.disruptor.event.handler.chain.HandlerChain;
 import com.lmax.disruptor.event.handler.chain.HandlerChainManager;
 import com.lmax.disruptor.util.StringUtils;
 
+@Getter
+@Slf4j
 public class DefaultHandlerChainManager implements HandlerChainManager<DisruptorEvent> {
-	
-	private static transient final Logger log = LoggerFactory.getLogger(DefaultHandlerChainManager.class);
 
     private Map<String, DisruptorHandler<DisruptorEvent>> handlers; 
 
@@ -30,19 +32,11 @@ public class DefaultHandlerChainManager implements HandlerChainManager<Disruptor
         this.handlers = new LinkedHashMap<String, DisruptorHandler<DisruptorEvent>>();
         this.handlerChains = new LinkedHashMap<String, NamedHandlerList<DisruptorEvent>>();
     }
-    
-    public Map<String, DisruptorHandler<DisruptorEvent>> getHandlers() {
-        return handlers;
-    }
 
     public void setHandlers(Map<String, DisruptorHandler<DisruptorEvent>> handlers) {
         this.handlers = handlers;
     }
 
-    public Map<String, NamedHandlerList<DisruptorEvent>> getHandlerChains() {
-        return handlerChains;
-    }
-    
     public void setHandlerChains(Map<String, NamedHandlerList<DisruptorEvent>> handlerChains) {
         this.handlerChains = handlerChains;
     }
