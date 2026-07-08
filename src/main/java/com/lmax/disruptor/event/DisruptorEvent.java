@@ -48,10 +48,10 @@ public class DisruptorEvent extends EventObject {
 	}
 
 	/**
-	 * 物理路由键：{@code namespace.topic[.tag]}。
+	 * 物理路由键：{@code namespace/topic[/tag]}，与 {@code @EventRule} 规则表达式（Ant 风格 / 分隔）保持一致。
 	 * <h3>路由模型</h3>
 	 * <pre>
-	 *   namespace.topic.tag
+	 *   namespace/topic/tag
 	 *   └───┬───┘ └─┬─┘ └┬┘
 	 *    环境隔离 业务分类 细分标签
 	 * </pre>
@@ -62,11 +62,11 @@ public class DisruptorEvent extends EventObject {
 	 * </ul>
 	 */
 	public String getRouteExpression() {
-		String base = (namespace == null ? "" : namespace) + "." + (topic == null ? "" : topic);
+		String base = (namespace == null ? "" : namespace) + "/" + (topic == null ? "" : topic);
 		if (tag == null || StringUtils.isBlank(tag) || "*".equals(tag)) {
 			return base;
 		}
-		return base + "." + tag;
+		return base + "/" + tag;
 	}
 	
 	@Override
