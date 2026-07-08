@@ -7,8 +7,6 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.lmax.disruptor.event.DisruptorEvent;
 import com.lmax.disruptor.event.handler.DisruptorHandler;
@@ -69,7 +67,7 @@ public class DefaultHandlerChainManager implements HandlerChainManager<Disruptor
             throw new NullPointerException("chainDefinition cannot be null or empty.");
         }
         if (log.isDebugEnabled()) {
-            log.debug("Creating chain [" + chainName + "] from String definition [" + chainDefinition + "]");
+            log.debug("Creating chain [{}] from String definition [{}]", chainName, chainDefinition);
         }
         String[] handlerTokens = splitChainDefinition(chainDefinition);
         for (String token : handlerTokens) {
