@@ -75,7 +75,7 @@ tt<maven.compiler.release>${java.version}</maven.compiler.release>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-central-publishing-plugin.version>0.10.0</maven-central-publishing-plugin.version>
         <checker-qual.version>3.48.3</checker-qual.version>
