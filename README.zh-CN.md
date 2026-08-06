@@ -1,6 +1,8 @@
 # disruptor-extension
 
-[![Java](https://img.shields.io/badge/Java-21-orange)] [![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://www.apache.org/licenses/LICENSE-2.0.txt)
+[English](./README.md) | [简体中文](./README.zh-CN.md)
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-green)
 
 > LMAX Disruptor 的 JDK 8 版本线扩展：处理链、事件分发器、发布模板、`@EventRule`
 > 路由以及线程 / 等待策略工厂。
@@ -18,8 +20,6 @@
 - [9. 测试与构建](#9-测试与构建)
 - [10. 版本与分支](#10-版本与分支)
 - [11. 贡献与许可](#11-贡献与许可)
-
-[English](./README.md) | [简体中文](./README.zh-CN.md)
 
 ## 1. 项目概述
 
