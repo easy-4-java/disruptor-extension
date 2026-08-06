@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, hiwepy (https://github.com/hiwepy).
+ * Copyright (c) 2017, Loong Wan (https://github.com/loong10k).
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,9 +22,9 @@ public class DisruptorEventThreeArgTranslator implements EventTranslatorThreeArg
 
 	@Override
 	public void translateTo(DisruptorEvent dtEevent, long sequence, String event, String tag, String key) {
-		dtEevent.setEvent(event);
+		dtEevent.setTopic(event);
 		dtEevent.setTag(tag);
-		dtEevent.setKey(key);
+		dtEevent.setMessageId(key);
 	}
 	
 }

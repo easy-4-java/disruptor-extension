@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, hiwepy (https://github.com/hiwepy).
+ * Copyright (c) 2017, Loong Wan (https://github.com/loong10k).
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 package com.lmax.disruptor.event.translator;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
-import com.lmax.disruptor.event.DisruptorBindEvent;
 import com.lmax.disruptor.event.DisruptorEvent;
 import com.lmax.disruptor.util.StringUtils;
 
@@ -24,14 +23,12 @@ public class DisruptorEventOneArgTranslator implements EventTranslatorOneArg<Dis
 
 	@Override
 	public void translateTo(DisruptorEvent event, long sequence, DisruptorEvent bind) {
-		event.setSource(bind.getSource());
-		event.setEvent(bind.getEvent());
+		event.setTopic(bind.getTopic());
+		event.setNamespace(bind.getNamespace());
 		event.setTag(bind.getTag());
-		event.setKey(StringUtils.hasText(bind.getKey()) ? bind.getKey() : String.valueOf(sequence));
-		if(event instanceof DisruptorBindEvent){
-			DisruptorBindEvent bindEvent = (DisruptorBindEvent)event;
-			bindEvent.bind(bind);
-		}
+		event.setMessageId(StringUtils.hasText(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
+		event.setPayload(bind.getPayload());
+		event.setSequence(sequence);
 	}
-	
+
 }

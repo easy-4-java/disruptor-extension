@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, hiwepy (https://github.com/hiwepy).
+ * Copyright (c) 2017, Loong Wan (https://github.com/loong10k).
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,33 +15,13 @@
  */
 package com.lmax.disruptor.event;
 
-@SuppressWarnings("serial")
-public class DisruptorBindEvent extends DisruptorEvent {
+import com.lmax.disruptor.EventFactory;
 
-	/**
-	 * 当前事件绑定的数据对象
-	 */
-	protected Object bind;
+public class DisruptorEventFactory implements EventFactory<DisruptorEvent> {
 
-	public DisruptorBindEvent() {
-		super(null);
-	}
-	
-	public DisruptorBindEvent(Object source) {
-		super(source);
+	@Override
+	public DisruptorEvent newInstance() {
+		return new DisruptorEvent(Thread.currentThread());
 	}
 
-	public DisruptorBindEvent(Object source, Object bind) {
-		super(source);
-		this.bind = bind;
-	}
-
-	public Object getBind() {
-		return bind;
-	}
-	
-	public void bind(Object bind) {
-		this.bind = bind;
-	}
-	
 }
