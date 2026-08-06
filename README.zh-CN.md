@@ -2,7 +2,7 @@
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-green)
+[![Java](https://img.shields.io/badge/Java-21-orange)](https://github.com/easy-4-java/disruptor-extension) [![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 > LMAX Disruptor 的 JDK 8 版本线扩展：处理链、事件分发器、发布模板、`@EventRule`
 > 路由以及线程 / 等待策略工厂。
