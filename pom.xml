@@ -79,7 +79,7 @@
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-central-publishing-plugin.version>0.11.0</maven-central-publishing-plugin.version>
-        <checker-qual.version>3.48.3</checker-qual.version>
+        <checker-qual.version>3.55.1</checker-qual.version>
         <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
     
 		<junit-jupiter.version>6.1.0</junit-jupiter.version>
