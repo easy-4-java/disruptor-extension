@@ -19,18 +19,39 @@ import lombok.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * {@link ThreadFactory} that creates named worker threads with an
+ * auto-incrementing counter suffix. Useful for distinguishing individual
+ * consumer threads in thread dumps and log output.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see ThreadFactory
+ */
 public class DisruptorEventWorkerThreadFactory implements ThreadFactory {
 
 	private int counter = 0;
 	private String prefix = "";
 
+	/**
+	 * Creates a new factory with the given thread name prefix.
+	 *
+	 * @param prefix the prefix for generated thread names (e.g. "worker")
+	 */
 	public DisruptorEventWorkerThreadFactory(String prefix) {
 		this.prefix = prefix;
 	}
 
+	/**
+	 * Creates a new named {@link Thread} using the configured prefix and an
+	 * auto-incrementing counter (e.g. "worker-0", "worker-1").
+	 *
+	 * @param r the runnable to execute
+	 * @return a new named thread
+	 */
 	@Override
     public Thread newThread(@NonNull Runnable r) {
 		return new Thread(r, prefix + "-" + counter++);
 	}
-	
+
 }
