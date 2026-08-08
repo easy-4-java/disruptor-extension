@@ -48,7 +48,9 @@ import java.util.regex.Pattern;
  * @author Rossen Stoyanchev
  * @author Sam Brannen
  * @author Vladislav Kisel
- * @since 16.07.2003
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see PathMatcher
  */
 public class AntPathMatcher implements PathMatcher {
 

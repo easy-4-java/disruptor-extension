@@ -19,20 +19,60 @@ package com.lmax.disruptor;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.event.DisruptorEvent;
 
+/**
+ * Convenience template that wraps a {@link Disruptor} and an
+ * {@link EventTranslatorOneArg} to simplify publishing
+ * {@link DisruptorEvent}s to the ring buffer.
+ *
+ * <p>Provides overloaded {@code publishEvent} methods that accept
+ * topic / namespace / tag / payload parameters and automatically
+ * populate a {@link DisruptorEvent} before delegating to the
+ * underlying Disruptor.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see Disruptor
+ * @see DisruptorEvent
+ * @see EventTranslatorOneArg
+ */
 public class DisruptorTemplate {
-	
+
+	/** The underlying Disruptor instance. */
 	protected final Disruptor<DisruptorEvent> disruptor;
+
+	/** The translator used to copy bind-event fields into the ring-buffer slot. */
 	protected final EventTranslatorOneArg<DisruptorEvent, DisruptorEvent> oneArgEventTranslator;
 
+	/**
+	 * Creates a new template backed by the given Disruptor and translator.
+	 *
+	 * @param disruptor            the Disruptor instance (must not be
+	 *                             {@code null})
+	 * @param oneArgEventTranslator the translator for one-arg publishing
+	 *                              (must not be {@code null})
+	 */
 	public DisruptorTemplate(Disruptor<DisruptorEvent> disruptor, EventTranslatorOneArg<DisruptorEvent, DisruptorEvent> oneArgEventTranslator) {
 		this.disruptor = disruptor;
 		this.oneArgEventTranslator = oneArgEventTranslator;
 	}
 
+	/**
+	 * Publishes the given {@link DisruptorEvent} to the ring buffer.
+	 *
+	 * @param event the event to publish (must not be {@code null})
+	 */
 	public void publishEvent(DisruptorEvent event) {
 		disruptor.publishEvent(oneArgEventTranslator, event);
 	}
-	
+
+	/**
+	 * Creates a new {@link DisruptorEvent} with the given topic, tag, and
+	 * payload, then publishes it to the ring buffer.
+	 *
+	 * @param topic   the event topic
+	 * @param tag     the event tag
+	 * @param payload the event payload
+	 */
 	public void publishEvent(String topic, String tag, Object payload) {
 		DisruptorEvent bindEvent = new DisruptorEvent();
 		bindEvent.setTopic(topic);
@@ -40,7 +80,17 @@ public class DisruptorTemplate {
 		bindEvent.setPayload(payload);
 		disruptor.publishEvent(oneArgEventTranslator, bindEvent);
 	}
-	
+
+	/**
+	 * Creates a new {@link DisruptorEvent} with the given topic, namespace,
+	 * tag, and payload, then publishes it to the ring buffer. The message
+	 * identifier is set to the current system time in milliseconds.
+	 *
+	 * @param topic     the event topic
+	 * @param namespace the event namespace
+	 * @param tag       the event tag
+	 * @param payload   the event payload
+	 */
 	public void publishEvent(String topic, String namespace, String tag, Object payload) {
 		DisruptorEvent bindEvent = new DisruptorEvent();
 		bindEvent.setTopic(topic);

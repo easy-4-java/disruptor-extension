@@ -15,8 +15,23 @@
  */
 package com.lmax.disruptor.event;
 
+/**
+ * Interface to be implemented by any component that wishes to be notified
+ * of the {@link DisruptorEventPublisher} it runs in.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see DisruptorEventPublisher
+ */
 public interface DisruptorEventPublisherAware {
 
+	/**
+	 * Sets the {@link DisruptorEventPublisher} that the implementing object
+	 * runs in.
+	 *
+	 * @param disruptorEventPublisher the publisher to inject (never
+	 *                                {@code null})
+	 */
 	void setDisruptorEventPublisher(DisruptorEventPublisher disruptorEventPublisher);
-	
+
 }
