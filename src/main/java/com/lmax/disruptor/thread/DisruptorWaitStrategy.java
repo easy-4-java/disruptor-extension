@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2017, Loong Wan (https://github.com/loong10k).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.lmax.disruptor.thread;
 
 import com.lmax.disruptor.*;
@@ -5,28 +20,42 @@ import com.lmax.disruptor.*;
 import java.util.function.Function;
 
 /**
- * 决定一个消费者将如何等待生产者将Event置入Disruptor的策略。用来权衡当生产者无法将新的事件放进RingBuffer时的处理策略。
- * （例如：当生产者太快，消费者太慢，会导致生成者获取不到新的事件槽来插入新事件，则会根据该策略进行处理，默认会堵塞）
+ * Enum that maps a named wait strategy to its corresponding
+ * {@link WaitStrategy} instance. Provides a convenient way to select the
+ * desired trade-off between CPU consumption and latency.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see WaitStrategy
+ * @see BlockingWaitStrategy
+ * @see SleepingWaitStrategy
+ * @see YieldingWaitStrategy
+ * @see BusySpinWaitStrategy
  */
 public enum DisruptorWaitStrategy {
 
     /**
-     * BlockingWaitStrategy 是最低效的策略，但其对CPU的消耗最小并且在各种不同部署环境中能提供更加一致的性能表现
+     * {@link BlockingWaitStrategy} -- least CPU-efficient but provides the
+     * most consistent performance across different environments.
      */
     BLOCKING_WAIT((x) -> new BlockingWaitStrategy()),
 
     /**
-     * SleepingWaitStrategy 的性能表现跟BlockingWaitStrategy差不多，对CPU的消耗也类似，但其对生产者线程的影响最小，适合用于异步日志类似的场景
+     * {@link SleepingWaitStrategy} -- similar performance to blocking, but
+     * minimises impact on producer threads. Good for async logging.
      */
     SLEEPING_WAIT((x) -> new SleepingWaitStrategy()),
 
     /**
-     * YieldingWaitStrategy是可以被用在低延迟系统中的两个策略之一，这种策略在减低系统延迟的同时也会增加CPU运算量。YieldingWaitStrategy策略会循环等待sequence增加到合适的值。循环中调用Thread.yield()允许其他准备好的线程执行。如果需要高性能而且事件消费者线程比逻辑内核少的时候，推荐使用YieldingWaitStrategy策略。例如：在开启超线程的时候。
+     * {@link YieldingWaitStrategy} -- low-latency strategy that increases
+     * CPU usage. Recommended when consumer threads &lt; logical cores.
      */
     YIELDING_WAIT((x) -> new YieldingWaitStrategy()),
 
     /**
-     * BusySpinWaitStrategy是性能最高的等待策略，同时也是对部署环境要求最高的策略。这个性能最好用在事件处理线程比物理内核数目还要小的时候。例如：在禁用超线程技术的时候。
+     * {@link BusySpinWaitStrategy} -- highest-performance strategy.
+     * Requires consumer threads &lt; physical cores (hyper-threading
+     * disabled).
      */
     BUSYSPIN_WAIT((x) -> new BusySpinWaitStrategy());
 
@@ -36,6 +65,12 @@ public enum DisruptorWaitStrategy {
         this.function = function;
     }
 
+    /**
+     * Looks up a {@code DisruptorWaitStrategy} by name (case-insensitive).
+     *
+     * @param name the strategy name (e.g. "BLOCKING_WAIT")
+     * @return the matching strategy, or {@code null} if not found
+     */
     public static DisruptorWaitStrategy from(String name) {
         for (DisruptorWaitStrategy strategy : DisruptorWaitStrategy.values()) {
             if (strategy.name().equalsIgnoreCase(name)) {
@@ -45,6 +80,12 @@ public enum DisruptorWaitStrategy {
         return null;
     }
 
+    /**
+     * Creates and returns a new {@link WaitStrategy} instance for this
+     * enum constant.
+     *
+     * @return a new WaitStrategy instance
+     */
     public WaitStrategy get() {
         return function.apply(0);
     }

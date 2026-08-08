@@ -1,10 +1,37 @@
+/*
+ * Copyright (c) 2017, Loong Wan (https://github.com/loong10k).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.lmax.disruptor.util;
 
 import java.util.*;
 
 
+/**
+ * Extension of {@link org.apache.commons.lang3.StringUtils} that adds
+ * convenience utilities for path handling, tokenization, locale parsing,
+ * and other common string operations used throughout the disruptor-extension
+ * framework.
+ *
+ * <p>Methods in this class are stateless and thread-safe.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see org.apache.commons.lang3.StringUtils
+ */
 public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
-	
+
 	private static final String FOLDER_SEPARATOR = "/";
 
 	private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
@@ -14,27 +41,29 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static final String CURRENT_PATH = ".";
 
 	private static final char EXTENSION_SEPARATOR = '.';
-	
-	/*
-	 * Any number of these characters are considered delimiters between
-	 * multiple context config paths in a single String value.
+
+	/**
+	 * Delimiter characters used to separate multiple context config paths in
+	 * a single String value.
 	 */
 	public static String CONFIG_LOCATION_DELIMITERS = ",; \t\n";
-	
+
 	private static final int[] allChineseScope = { 1601, 1637, 1833, 2078,
 			2274, 2302, 2433, 2594, 2787, 3106, 3212, 3472, 3635, 3722, 3730,
 			3858, 4027, 4086, 4390, 4558, 4684, 4925, 5249, 5600,
 			Integer.MAX_VALUE };
+	/** Fallback character returned when a Chinese pinyin initial cannot be determined. */
 	public static final char unknowChar = '*';
 	private static final char[] allEnglishLetter = { 'A', 'B', 'C', 'D', 'E',
 			'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
 			'T', 'W', 'X', 'Y', 'Z', unknowChar };
 
-	/*
-	 * 字串是否为空
-	 * 
-	 * @param str
-	 * @return
+	/**
+	 * Checks whether the given String is empty, null, or the literal
+	 * {@code "NULL"} (case-insensitive).
+	 *
+	 * @param str the string to check (may be {@code null})
+	 * @return {@code true} if the string is empty, null, or "NULL"
 	 */
 	public static boolean isEmpty(String str) {
 		if (str == null) {
@@ -46,20 +75,25 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		return false;
 	}
-	
-	/*
-	 * 该方法不能被删除；可能引起调用者代码报错
+
+	/**
+	 * Checks whether the given String is not empty.
+	 * This method cannot be removed; removing it may break callers.
+	 *
+	 * @param str the string to check (may be {@code null})
+	 * @return {@code true} if the string is not empty
 	 */
 	public static boolean isNotEmpty(String str) {
 		return !isEmpty(str);
 	}
-	
 
-	/*
-	 * 判断 Null 或 空字符串
-	 * 
-	 * @param str
-	 * @return
+
+	/**
+	 * Checks whether the given string is null or consists solely of
+	 * whitespace characters.
+	 *
+	 * @param str the string to check (may be {@code null})
+	 * @return {@code true} if the string is null or blank
 	 */
 	public static boolean isNull(String str) {
 
@@ -70,30 +104,21 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 	// General convenience methods for working with Strings
 	//---------------------------------------------------------------------
 
-	/*
-	 * Check whether the given String is empty.
-	 * <p>This method accepts any Object as an argument, comparing it to
-	 * {@code null} and the empty String. As a consequence, this method
-	 * will never return {@code true} for a non-null non-String object.
-	 * <p>The Object signature is useful for general attribute handling code
-	 * that commonly deals with Strings but generally has to iterate over
-	 * Objects since attributes may e.g. be primitive value objects as well.
-	 * @param str the candidate String
+	/**
+	 * Checks whether the given Object is null or equals the empty String.
+	 *
+	 * @param str the candidate Object (may be {@code null})
+	 * @return {@code true} if the object is null or equals ""
 	 * @since 3.2.1
 	 */
 	public static boolean isEmpty(Object str) {
 		return (str == null || "".equals(str));
 	}
 
-	/*
-	 * Check that the given CharSequence is neither {@code null} nor of length 0.
-	 * Note: Will return {@code true} for a CharSequence that purely consists of whitespace.
-	 * <p><pre class="code">
-	 * StringUtils.hasLength(null) = false
-	 * StringUtils.hasLength("") = false
-	 * StringUtils.hasLength(" ") = true
-	 * StringUtils.hasLength("Hello") = true
-	 * </pre>
+	/**
+	 * Checks that the given CharSequence is neither {@code null} nor of
+	 * length 0. Returns {@code true} for whitespace-only content.
+	 *
 	 * @param str the CharSequence to check (may be {@code null})
 	 * @return {@code true} if the CharSequence is not null and has length
 	 * @see #hasText(String)
@@ -102,9 +127,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return (str != null && str.length() > 0);
 	}
 
-	/*
-	 * Check that the given String is neither {@code null} nor of length 0.
-	 * Note: Will return {@code true} for a String that purely consists of whitespace.
+	/**
+	 * Checks that the given String is neither {@code null} nor of length 0.
+	 * Returns {@code true} for whitespace-only content.
+	 *
 	 * @param str the String to check (may be {@code null})
 	 * @return {@code true} if the String is not null and has length
 	 * @see #hasLength(CharSequence)
@@ -113,20 +139,13 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return hasLength((CharSequence) str);
 	}
 
-	/*
-	 * Check whether the given CharSequence has actual text.
-	 * More specifically, returns {@code true} if the string not {@code null},
-	 * its length is greater than 0, and it contains at least one non-whitespace character.
-	 * <p><pre class="code">
-	 * StringUtils.hasText(null) = false
-	 * StringUtils.hasText("") = false
-	 * StringUtils.hasText(" ") = false
-	 * StringUtils.hasText("12345") = true
-	 * StringUtils.hasText(" 12345 ") = true
-	 * </pre>
+	/**
+	 * Checks whether the given CharSequence has actual text -- i.e. is not
+	 * null, has length &gt; 0, and contains at least one non-whitespace
+	 * character.
+	 *
 	 * @param str the CharSequence to check (may be {@code null})
-	 * @return {@code true} if the CharSequence is not {@code null},
-	 * its length is greater than 0, and it does not contain whitespace only
+	 * @return {@code true} if the CharSequence contains actual text
 	 * @see Character#isWhitespace
 	 */
 	public static boolean hasText(CharSequence str) {
@@ -142,24 +161,24 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return false;
 	}
 
-	/*
-	 * Check whether the given String has actual text.
-	 * More specifically, returns {@code true} if the string not {@code null},
-	 * its length is greater than 0, and it contains at least one non-whitespace character.
+	/**
+	 * Checks whether the given String has actual text.
+	 *
 	 * @param str the String to check (may be {@code null})
-	 * @return {@code true} if the String is not {@code null}, its length is
-	 * greater than 0, and it does not contain whitespace only
+	 * @return {@code true} if the String contains actual text
 	 * @see #hasText(CharSequence)
 	 */
 	public static boolean hasText(String str) {
 		return hasText((CharSequence) str);
 	}
 
-	/*
-	 * Check whether the given CharSequence contains any whitespace characters.
+	/**
+	 * Checks whether the given CharSequence contains any whitespace
+	 * characters.
+	 *
 	 * @param str the CharSequence to check (may be {@code null})
-	 * @return {@code true} if the CharSequence is not empty and
-	 * contains at least 1 whitespace character
+	 * @return {@code true} if the CharSequence contains at least one
+	 *         whitespace character
 	 * @see Character#isWhitespace
 	 */
 	public static boolean containsWhitespace(CharSequence str) {
@@ -175,22 +194,24 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return false;
 	}
 
-	/*
-	 * Check whether the given String contains any whitespace characters.
+	/**
+	 * Checks whether the given String contains any whitespace characters.
+	 *
 	 * @param str the String to check (may be {@code null})
-	 * @return {@code true} if the String is not empty and
-	 * contains at least 1 whitespace character
+	 * @return {@code true} if the String contains at least one whitespace
+	 *         character
 	 * @see #containsWhitespace(CharSequence)
 	 */
 	public static boolean containsWhitespace(String str) {
 		return containsWhitespace((CharSequence) str);
 	}
 
-	/*
-	 * Trim leading and trailing whitespace from the given String.
-	 * @param str the String to check
+	/**
+	 * Trims leading and trailing whitespace from the given String.
+	 *
+	 * @param str the String to trim
 	 * @return the trimmed String
-	 * @see java.lang.Character#isWhitespace
+	 * @see Character#isWhitespace
 	 */
 	public static String trimWhitespace(String str) {
 		if (!hasLength(str)) {
@@ -206,12 +227,13 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Trim <i>all</i> whitespace from the given String:
-	 * leading, trailing, and in between characters.
-	 * @param str the String to check
+	/**
+	 * Trims <em>all</em> whitespace from the given String: leading, trailing,
+	 * and in between characters.
+	 *
+	 * @param str the String to trim
 	 * @return the trimmed String
-	 * @see java.lang.Character#isWhitespace
+	 * @see Character#isWhitespace
 	 */
 	public static String trimAllWhitespace(String str) {
 		if (!hasLength(str)) {
@@ -228,11 +250,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Trim leading whitespace from the given String.
-	 * @param str the String to check
+	/**
+	 * Trims leading whitespace from the given String.
+	 *
+	 * @param str the String to trim
 	 * @return the trimmed String
-	 * @see java.lang.Character#isWhitespace
+	 * @see Character#isWhitespace
 	 */
 	public static String trimLeadingWhitespace(String str) {
 		if (!hasLength(str)) {
@@ -245,11 +268,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Trim trailing whitespace from the given String.
-	 * @param str the String to check
+	/**
+	 * Trims trailing whitespace from the given String.
+	 *
+	 * @param str the String to trim
 	 * @return the trimmed String
-	 * @see java.lang.Character#isWhitespace
+	 * @see Character#isWhitespace
 	 */
 	public static String trimTrailingWhitespace(String str) {
 		if (!hasLength(str)) {
@@ -262,9 +286,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Trim all occurrences of the supplied leading character from the given String.
-	 * @param str the String to check
+	/**
+	 * Trims all occurrences of the supplied leading character from the given
+	 * String.
+	 *
+	 * @param str             the String to trim
 	 * @param leadingCharacter the leading character to be trimmed
 	 * @return the trimmed String
 	 */
@@ -279,9 +305,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Trim all occurrences of the supplied trailing character from the given String.
-	 * @param str the String to check
+	/**
+	 * Trims all occurrences of the supplied trailing character from the given
+	 * String.
+	 *
+	 * @param str               the String to trim
 	 * @param trailingCharacter the trailing character to be trimmed
 	 * @return the trimmed String
 	 */
@@ -297,12 +325,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 
-	/*
-	 * Test if the given String starts with the specified prefix,
-	 * ignoring upper/lower case.
-	 * @param str the String to check
+	/**
+	 * Tests if the given String starts with the specified prefix, ignoring
+	 * case.
+	 *
+	 * @param str    the String to check
 	 * @param prefix the prefix to look for
-	 * @see java.lang.String#startsWith
+	 * @return {@code true} if the String starts with the prefix
+	 *         (case-insensitive)
 	 */
 	public static boolean startsWithIgnoreCase(String str, String prefix) {
 		if (str == null || prefix == null) {
@@ -319,12 +349,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return lcStr.equals(lcPrefix);
 	}
 
-	/*
-	 * Test if the given String ends with the specified suffix,
-	 * ignoring upper/lower case.
-	 * @param str the String to check
+	/**
+	 * Tests if the given String ends with the specified suffix, ignoring
+	 * case.
+	 *
+	 * @param str    the String to check
 	 * @param suffix the suffix to look for
-	 * @see java.lang.String#endsWith
+	 * @return {@code true} if the String ends with the suffix
+	 *         (case-insensitive)
 	 */
 	public static boolean endsWithIgnoreCase(String str, String suffix) {
 		if (str == null || suffix == null) {
@@ -342,12 +374,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return lcStr.equals(lcSuffix);
 	}
 
-	/*
-	 * Test whether the given string matches the given substring
-	 * at the given index.
-	 * @param str the original string (or StringBuilder)
-	 * @param index the index in the original string to start matching against
+	/**
+	 * Tests whether the given string matches the given substring at the
+	 * given index.
+	 *
+	 * @param str       the original string (or StringBuilder)
+	 * @param index     the index in the original string to start matching
 	 * @param substring the substring to match at the given index
+	 * @return {@code true} if the substring matches at the given index
 	 */
 	public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
 		for (int j = 0; j < substring.length(); j++) {
@@ -359,10 +393,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return true;
 	}
 
-	/*
-	 * Count the occurrences of the substring in string s.
-	 * @param str string to search in. Return 0 if this is null.
-	 * @param sub string to search for. Return 0 if this is null.
+	/**
+	 * Counts the occurrences of the substring in the given string.
+	 *
+	 * @param str string to search in (returns 0 if {@code null})
+	 * @param sub string to search for (returns 0 if {@code null})
+	 * @return the number of occurrences
 	 */
 	public static int countOccurrencesOf(String str, String sub) {
 		if (str == null || sub == null || str.length() == 0 || sub.length() == 0) {
@@ -378,13 +414,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return count;
 	}
 
-	/*
-	 * Replace all occurrences of a substring within a string with
-	 * another string.
-	 * @param inString String to examine
+	/**
+	 * Replaces all occurrences of a substring within a string with another
+	 * string.
+	 *
+	 * @param inString   String to examine
 	 * @param oldPattern String to replace
 	 * @param newPattern String to insert
-	 * @return a String with the replacements
+	 * @return a String with the replacements applied
 	 */
 	public static String replace(String inString, String oldPattern, String newPattern) {
 		if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null) {
@@ -406,21 +443,23 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Delete all occurrences of the given substring.
+	/**
+	 * Deletes all occurrences of the given substring from the input string.
+	 *
 	 * @param inString the original String
-	 * @param pattern the pattern to delete all occurrences of
+	 * @param pattern  the pattern to delete all occurrences of
 	 * @return the resulting String
 	 */
 	public static String delete(String inString, String pattern) {
 		return replace(inString, pattern, "");
 	}
 
-	/*
-	 * Delete any character in a given String.
-	 * @param inString the original String
-	 * @param charsToDelete a set of characters to delete.
-	 * E.g. "az\n" will delete 'a's, 'z's and new lines.
+	/**
+	 * Deletes any character in the given set from the input String.
+	 *
+	 * @param inString      the original String
+	 * @param charsToDelete a set of characters to delete (e.g. "az\n" will
+	 *                      delete 'a's, 'z's and new lines)
 	 * @return the resulting String
 	 */
 	public static String deleteAny(String inString, String charsToDelete) {
@@ -442,43 +481,45 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 	// Convenience methods for working with formatted Strings
 	//---------------------------------------------------------------------
 
-	 
-	/*
-	 * Unqualify a string qualified by a '.' dot character. For example,
-	 * "this.name.is.qualified", returns "qualified".
+
+	/**
+	 * Unqualifies a string qualified by a '.' dot character. For example,
+	 * "this.name.is.qualified" returns "qualified".
+	 *
 	 * @param qualifiedName the qualified name
+	 * @return the unqualified name
 	 */
 	public static String unqualify(String qualifiedName) {
 		return unqualify(qualifiedName, '.');
 	}
 
-	/*
-	 * Unqualify a string qualified by a separator character. For example,
+	/**
+	 * Unqualifies a string qualified by a separator character. For example,
 	 * "this:name:is:qualified" returns "qualified" if using a ':' separator.
+	 *
 	 * @param qualifiedName the qualified name
-	 * @param separator the separator
+	 * @param separator     the separator
+	 * @return the unqualified name
 	 */
 	public static String unqualify(String qualifiedName, char separator) {
 		return qualifiedName.substring(qualifiedName.lastIndexOf(separator) + 1);
 	}
 
-	/*
-	 * Capitalize a {@code String}, changing the first letter to
-	 * upper case as per {@link Character#toUpperCase(char)}.
-	 * No other letters are changed.
-	 * @param str the String to capitalize, may be {@code null}
-	 * @return the capitalized String, {@code null} if null
+	/**
+	 * Capitalizes a {@code String}, changing the first letter to upper case.
+	 *
+	 * @param str the String to capitalize (may be {@code null})
+	 * @return the capitalized String, or {@code null} if the input was null
 	 */
 	public static String capitalize(String str) {
 		return changeFirstCharacterCase(str, true);
 	}
 
-	/*
-	 * Uncapitalize a {@code String}, changing the first letter to
-	 * lower case as per {@link Character#toLowerCase(char)}.
-	 * No other letters are changed.
-	 * @param str the String to uncapitalize, may be {@code null}
-	 * @return the uncapitalized String, {@code null} if null
+	/**
+	 * Uncapitalizes a {@code String}, changing the first letter to lower case.
+	 *
+	 * @param str the String to uncapitalize (may be {@code null})
+	 * @return the uncapitalized String, or {@code null} if the input was null
 	 */
 	public static String uncapitalize(String str) {
 		return changeFirstCharacterCase(str, false);
@@ -499,9 +540,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Extract the filename from the given path,
-	 * e.g. "mypath/myfile.txt" -> "myfile.txt".
+	/**
+	 * Extracts the filename from the given path. For example,
+	 * "mypath/myfile.txt" returns "myfile.txt".
+	 *
 	 * @param path the file path (may be {@code null})
 	 * @return the extracted filename, or {@code null} if none
 	 */
@@ -513,9 +555,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
 	}
 
-	/*
-	 * Extract the filename extension from the given path,
-	 * e.g. "mypath/myfile.txt" -> "txt".
+	/**
+	 * Extracts the filename extension from the given path. For example,
+	 * "mypath/myfile.txt" returns "txt".
+	 *
 	 * @param path the file path (may be {@code null})
 	 * @return the extracted filename extension, or {@code null} if none
 	 */
@@ -534,12 +577,13 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return path.substring(extIndex + 1);
 	}
 
-	/*
-	 * Strip the filename extension from the given path,
-	 * e.g. "mypath/myfile.txt" -> "mypath/myfile".
+	/**
+	 * Strips the filename extension from the given path. For example,
+	 * "mypath/myfile.txt" returns "mypath/myfile".
+	 *
 	 * @param path the file path (may be {@code null})
-	 * @return the path with stripped filename extension,
-	 * or {@code null} if none
+	 * @return the path with stripped filename extension, or {@code null}
+	 *         if the input was null
 	 */
 	public static String stripFilenameExtension(String path) {
 		if (path == null) {
@@ -556,12 +600,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return path.substring(0, extIndex);
 	}
 
-	/*
-	 * Apply the given relative path to the given path,
-	 * assuming standard Java folder separation (i.e. "/" separators).
-	 * @param path the path to start from (usually a full file path)
+	/**
+	 * Applies the given relative path to the given path, assuming standard
+	 * Java folder separation (i.e. "/" separators).
+	 *
+	 * @param path         the path to start from (usually a full file path)
 	 * @param relativePath the relative path to apply
-	 * (relative to the full file path above)
 	 * @return the full file path that results from applying the relative path
 	 */
 	public static String applyRelativePath(String path, String relativePath) {
@@ -578,11 +622,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
-	/*
-	 * Normalize the path by suppressing sequences like "path/.." and
-	 * inner simple dots.
-	 * <p>The result is convenient for path comparison. For other uses,
-	 * notice that Windows separators ("\") are replaced by simple slashes.
+	/**
+	 * Normalizes the path by suppressing sequences like "path/.." and inner
+	 * simple dots.
+	 *
 	 * @param path the original path
 	 * @return the normalized path
 	 */
@@ -645,8 +688,9 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return prefix + collectionToDelimitedString(pathElements, FOLDER_SEPARATOR);
 	}
 
-	/*
-	 * Compare two paths after normalization of them.
+	/**
+	 * Compares two paths after normalization of them.
+	 *
 	 * @param path1 first path for comparison
 	 * @param path2 second path for comparison
 	 * @return whether the two paths are equivalent after normalization
@@ -655,14 +699,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return cleanPath(path1).equals(cleanPath(path2));
 	}
 
-	/*
-	 * Parse the given {@code localeString} value into a {@link Locale}.
-	 * <p>This is the inverse operation of {@link Locale#toString Locale's toString}.
-	 * @param localeString the locale String, following {@code Locale's}
-	 * {@code toString()} format ("en", "en_UK", etc);
-	 * also accepts spaces as separators, as an alternative to underscores
+	/**
+	 * Parses the given {@code localeString} value into a {@link Locale}.
+	 * This is the inverse operation of {@link Locale#toString()}.
+	 *
+	 * @param localeString the locale String (e.g. "en", "en_UK")
 	 * @return a corresponding {@code Locale} instance
-	 * @throws IllegalArgumentException in case of an invalid locale specification
+	 * @throws IllegalArgumentException in case of an invalid locale
+	 *                                  specification
 	 */
 	public static Locale parseLocaleString(String localeString) {
 		String[] parts = tokenizeToStringArray(localeString, "_ ", false, false);
@@ -694,9 +738,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
-	/*
-	 * Determine the RFC 3066 compliant language tag,
-	 * as used for the HTTP "Accept-Language" header.
+	/**
+	 * Determines the RFC 3066 compliant language tag, as used for the HTTP
+	 * "Accept-Language" header.
+	 *
 	 * @param locale the Locale to transform to a language tag
 	 * @return the RFC 3066 compliant language tag as String
 	 */
@@ -704,12 +749,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return locale.getLanguage() + (hasText(locale.getCountry()) ? "-" + locale.getCountry() : "");
 	}
 
-	/*
-	 * Parse the given {@code timeZoneString} value into a {@link TimeZone}.
-	 * @param timeZoneString the time zone String, following {@link TimeZone#getTimeZone(String)}
-	 * but throwing {@link IllegalArgumentException} in case of an invalid time zone specification
+	/**
+	 * Parses the given {@code timeZoneString} value into a {@link TimeZone}.
+	 *
+	 * @param timeZoneString the time zone String (see
+	 *                       {@link TimeZone#getTimeZone(String)})
 	 * @return a corresponding {@link TimeZone} instance
-	 * @throws IllegalArgumentException in case of an invalid time zone specification
+	 * @throws IllegalArgumentException in case of an invalid time zone
+	 *                                  specification
 	 */
 	public static TimeZone parseTimeZoneString(String timeZoneString) {
 		TimeZone timeZone = TimeZone.getTimeZone(timeZoneString);
@@ -722,12 +769,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 
 
-	/*
-	 * Copy the given Collection into a String array.
-	 * The Collection must contain String elements only.
-	 * @param collection the Collection to copy
-	 * @return the String array ({@code null} if the passed-in
-	 * Collection was {@code null})
+	/**
+	 * Copies the given Collection into a String array.
+	 *
+	 * @param collection the Collection to copy (may be {@code null})
+	 * @return the String array, or {@code null} if the collection was null
 	 */
 	public static String[] toStringArray(Collection<String> collection) {
 		if (collection == null) {
@@ -736,12 +782,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return collection.toArray(new String[collection.size()]);
 	}
 
-	/*
-	 * Copy the given Enumeration into a String array.
-	 * The Enumeration must contain String elements only.
-	 * @param enumeration the Enumeration to copy
-	 * @return the String array ({@code null} if the passed-in
-	 * Enumeration was {@code null})
+	/**
+	 * Copies the given Enumeration into a String array.
+	 *
+	 * @param enumeration the Enumeration to copy (may be {@code null})
+	 * @return the String array, or {@code null} if the enumeration was null
 	 */
 	public static String[] toStringArray(Enumeration<String> enumeration) {
 		if (enumeration == null) {
@@ -753,34 +798,32 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 
 
-	/*
-	 * Take an array Strings and split each element based on the given delimiter.
-	 * A {@code Properties} instance is then generated, with the left of the
-	 * delimiter providing the key, and the right of the delimiter providing the value.
-	 * <p>Will trim both the key and value before adding them to the
-	 * {@code Properties} instance.
-	 * @param array the array to process
-	 * @param delimiter to split each element using (typically the equals symbol)
-	 * @return a {@code Properties} instance representing the array contents,
-	 * or {@code null} if the array to process was null or empty
+	/**
+	 * Splits each element in the given array based on the given delimiter
+	 * and generates a {@link Properties} instance with the left part as
+	 * the key and the right part as the value.
+	 *
+	 * @param array     the array to process
+	 * @param delimiter to split each element using (typically the equals
+	 *                  symbol)
+	 * @return a {@code Properties} instance, or {@code null} if the array
+	 *         was null or empty
 	 */
 	public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter) {
 		return splitArrayElementsIntoProperties(array, delimiter, null);
 	}
 
-	/*
-	 * Take an array Strings and split each element based on the given delimiter.
-	 * A {@code Properties} instance is then generated, with the left of the
-	 * delimiter providing the key, and the right of the delimiter providing the value.
-	 * <p>Will trim both the key and value before adding them to the
-	 * {@code Properties} instance.
-	 * @param array the array to process
-	 * @param delimiter to split each element using (typically the equals symbol)
-	 * @param charsToDelete one or more characters to remove from each element
-	 * prior to attempting the split operation (typically the quotation mark
-	 * symbol), or {@code null} if no removal should occur
-	 * @return a {@code Properties} instance representing the array contents,
-	 * or {@code null} if the array to process was {@code null} or empty
+	/**
+	 * Splits each element in the given array based on the given delimiter
+	 * and generates a {@link Properties} instance. Optionally deletes
+	 * specified characters from each element before splitting.
+	 *
+	 * @param array         the array to process
+	 * @param delimiter     to split each element using
+	 * @param charsToDelete characters to remove from each element prior
+	 *                      to splitting, or {@code null}
+	 * @return a {@code Properties} instance, or {@code null} if the array
+	 *         was null or empty
 	 */
 	public static Properties splitArrayElementsIntoProperties(
 			String[] array, String delimiter, String charsToDelete) {
@@ -802,30 +845,25 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return result;
 	}
 
-	/*
-	 * 
-	 * @description	：获得以 ",; \t\n"分割的字符数组
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @date 		：Dec 17, 2015 9:07:47 PM
-	 * @param str
-	 * @return
+	/**
+	 * Tokenizes the given String into a String array using the default
+	 * delimiters ({@value #CONFIG_LOCATION_DELIMITERS}).
+	 *
+	 * @param str the String to tokenize
+	 * @return an array of tokens
 	 */
 	public static String[] tokenizeToStringArray(String str) {
 		return tokenizeToStringArray(str, CONFIG_LOCATION_DELIMITERS, true, true);
 	}
-	
-	/*
-	 * Tokenize the given String into a String array via a StringTokenizer.
-	 * Trims tokens and omits empty tokens.
-	 * <p>The given delimiters string is supposed to consist of any number of
-	 * delimiter characters. Each of those characters can be used to separate
-	 * tokens. A delimiter is always a single character; for multi-character
-	 * delimiters, consider using {@code delimitedListToStringArray}
-	 * @param str the String to tokenize
+
+	/**
+	 * Tokenizes the given String into a String array via a
+	 * {@link StringTokenizer}. Trims tokens and omits empty tokens.
+	 *
+	 * @param str        the String to tokenize
 	 * @param delimiters the delimiter characters, assembled as String
-	 * (each of those characters is individually considered as delimiter).
 	 * @return an array of the tokens
-	 * @see java.util.StringTokenizer
+	 * @see StringTokenizer
 	 * @see String#trim()
 	 * @see #delimitedListToStringArray
 	 */
@@ -833,22 +871,17 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return tokenizeToStringArray(str, delimiters, true, true);
 	}
 
-	/*
-	 * Tokenize the given String into a String array via a StringTokenizer.
-	 * <p>The given delimiters string is supposed to consist of any number of
-	 * delimiter characters. Each of those characters can be used to separate
-	 * tokens. A delimiter is always a single character; for multi-character
-	 * delimiters, consider using {@code delimitedListToStringArray}
-	 * @param str the String to tokenize
-	 * @param delimiters the delimiter characters, assembled as String
-	 * (each of those characters is individually considered as delimiter)
-	 * @param trimTokens trim the tokens via String's {@code trim}
-	 * @param ignoreEmptyTokens omit empty tokens from the result array
-	 * (only applies to tokens that are empty after trimming; StringTokenizer
-	 * will not consider subsequent delimiters as token in the first place).
-	 * @return an array of the tokens ({@code null} if the input String
-	 * was {@code null})
-	 * @see java.util.StringTokenizer
+	/**
+	 * Tokenizes the given String into a String array via a
+	 * {@link StringTokenizer}.
+	 *
+	 * @param str               the String to tokenize
+	 * @param delimiters        the delimiter characters, assembled as String
+	 * @param trimTokens        whether to trim tokens via {@code trim()}
+	 * @param ignoreEmptyTokens whether to omit empty tokens from the result
+	 * @return an array of the tokens, or {@code null} if the input String
+	 *         was {@code null}
+	 * @see StringTokenizer
 	 * @see String#trim()
 	 * @see #delimitedListToStringArray
 	 */
@@ -872,14 +905,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return toStringArray(tokens);
 	}
 
-	/*
-	 * Take a String which is a delimited list and convert it to a String array.
-	 * <p>A single delimiter can consists of more than one character: It will still
-	 * be considered as single delimiter string, rather than as bunch of potential
-	 * delimiter characters - in contrast to {@code tokenizeToStringArray}.
-	 * @param str the input String
-	 * @param delimiter the delimiter between elements (this is a single delimiter,
-	 * rather than a bunch individual delimiter characters)
+	/**
+	 * Takes a String which is a delimited list and converts it to a String
+	 * array. A single delimiter can consist of more than one character.
+	 *
+	 * @param str       the input String
+	 * @param delimiter the delimiter between elements
 	 * @return an array of the tokens in the list
 	 * @see #tokenizeToStringArray
 	 */
@@ -887,16 +918,13 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return delimitedListToStringArray(str, delimiter, null);
 	}
 
-	/*
-	 * Take a String which is a delimited list and convert it to a String array.
-	 * <p>A single delimiter can consists of more than one character: It will still
-	 * be considered as single delimiter string, rather than as bunch of potential
-	 * delimiter characters - in contrast to {@code tokenizeToStringArray}.
-	 * @param str the input String
-	 * @param delimiter the delimiter between elements (this is a single delimiter,
-	 * rather than a bunch individual delimiter characters)
-	 * @param charsToDelete a set of characters to delete. Useful for deleting unwanted
-	 * line breaks: e.g. "\r\n\f" will delete all new lines and line feeds in a String.
+	/**
+	 * Takes a String which is a delimited list and converts it to a String
+	 * array. Optionally deletes specified characters from each token.
+	 *
+	 * @param str           the input String
+	 * @param delimiter     the delimiter between elements
+	 * @param charsToDelete characters to delete from each element
 	 * @return an array of the tokens in the list
 	 * @see #tokenizeToStringArray
 	 */
@@ -928,8 +956,9 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return toStringArray(result);
 	}
 
-	/*
-	 * Convert a CSV list into an array of Strings.
+	/**
+	 * Converts a CSV list into an array of Strings.
+	 *
 	 * @param str the input String
 	 * @return an array of Strings, or the empty array in case of empty input
 	 */
@@ -937,9 +966,10 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return delimitedListToStringArray(str, ",");
 	}
 
-	/*
-	 * Convenience method to convert a CSV string list to a set.
-	 * Note that this will suppress duplicates.
+	/**
+	 * Convenience method to convert a CSV string list to a set. Duplicates
+	 * are suppressed.
+	 *
 	 * @param str the input String
 	 * @return a Set of String entries in the list
 	 */
@@ -952,11 +982,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return set;
 	}
 
-	/*
-	 * Convenience method to return a Collection as a delimited (e.g. CSV)
-	 * String. E.g. useful for {@code toString()} implementations.
-	 * @param coll the Collection to display
-	 * @param delim the delimiter to use (probably a ",")
+	/**
+	 * Returns a Collection as a delimited (e.g. CSV) String.
+	 *
+	 * @param coll   the Collection to display
+	 * @param delim  the delimiter to use (e.g. ",")
 	 * @param prefix the String to start each element with
 	 * @param suffix the String to end each element with
 	 * @return the delimited String
@@ -976,33 +1006,33 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * Convenience method to return a Collection as a delimited (e.g. CSV)
-	 * String. E.g. useful for {@code toString()} implementations.
-	 * @param coll the Collection to display
-	 * @param delim the delimiter to use (probably a ",")
+	/**
+	 * Returns a Collection as a delimited (e.g. CSV) String.
+	 *
+	 * @param coll  the Collection to display
+	 * @param delim the delimiter to use (e.g. ",")
 	 * @return the delimited String
 	 */
 	public static String collectionToDelimitedString(Collection<?> coll, String delim) {
 		return collectionToDelimitedString(coll, delim, "", "");
 	}
 
-	/*
-	 * Convenience method to return a Collection as a CSV String.
-	 * E.g. useful for {@code toString()} implementations.
+	/**
+	 * Returns a Collection as a CSV String.
+	 *
 	 * @param coll the Collection to display
-	 * @return the delimited String
+	 * @return the CSV String
 	 */
 	public static String collectionToCommaDelimitedString(Collection<?> coll) {
 		return collectionToDelimitedString(coll, ",");
 	}
 
 
-	/*
-	 * 生成查询字串Map
-	 * 
-	 * @param str
-	 * @return
+	/**
+	 * Generates a query parameter Map from a backtick-delimited string.
+	 *
+	 * @param str the input string
+	 * @return a Map of query parameters
 	 */
 	public static Map<String, String> getMapFromQueryParamString(String str) {
 		Map<String, String> param = new HashMap<String, String>();
@@ -1013,16 +1043,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return param;
 	}
 
-	/*
-	 * 全替换
-	 * 
-	 * @param src
-	 *            替换字串
-	 * @param tar
-	 *            替换目标
-	 * @param str
-	 *            主字串
-	 * @return
+	/**
+	 * Replaces all occurrences of {@code src} with {@code tar} in the given
+	 * string.
+	 *
+	 * @param src the substring to replace
+	 * @param tar the replacement string
+	 * @param str the main string
+	 * @return the resulting string with all replacements applied
 	 */
 	public static String replaceAll(String src, String tar, String str) {
 		StringBuilder sb = new StringBuilder();
@@ -1045,11 +1073,15 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return sb.toString();
 	}
 
-	/*
-	 * 
-	 * @param bytesSrc
-	 * @param bytesTar
-	 * @return
+	/**
+	 * Checks if the byte array starts with the given prefix at the specified
+	 * offset.
+	 *
+	 * @param bytesSrc the source byte array
+	 * @param startSrc the start offset in the source array
+	 * @param bytesTar the target byte array to compare
+	 * @param startTar the start offset in the target array
+	 * @return {@code true} if the source array starts with the target
 	 */
 	private static boolean isStartWith(byte bytesSrc[], int startSrc,
 			byte bytesTar[], int startTar) {
@@ -1061,11 +1093,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return true;
 	}
 
-	/*
-	 * 取中文拼音首字符
-	 * 
-	 * @param str
-	 * @return
+	/**
+	 * Gets the first letter of a Chinese word using GBK encoding for pinyin
+	 * initial lookup.
+	 *
+	 * @param str the Chinese string
+	 * @return the pinyin initial letter, or {@code '*'} if not determinable
 	 */
 	public static char getFirstLetterFromChinessWord(String str) {
 		char result = '*';
@@ -1100,12 +1133,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return result;
 	}
 
-	/*
-	 * 字串分割
-	 * 
-	 * @param src
-	 * @param letter
-	 * @return
+	/**
+	 * Splits a string by the given character delimiter.
+	 *
+	 * @param src    the source string
+	 * @param letter the delimiter character
+	 * @return an array of split strings
 	 */
 	public static String[] split(String src, char letter) {
 		if (src == null) {
@@ -1132,14 +1165,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return retStr;
 	}
 
-	/*
-	 * Split a String at the first occurrence of the delimiter.
-	 * Does not include the delimiter in the result.
-	 * @param toSplit the string to split
+	/**
+	 * Splits a String at the first occurrence of the delimiter. Does not
+	 * include the delimiter in the result.
+	 *
+	 * @param toSplit   the string to split
 	 * @param delimiter to split the string up with
-	 * @return a two element array with index 0 being before the delimiter, and
-	 * index 1 being after the delimiter (neither element includes the delimiter);
-	 * or {@code null} if the delimiter wasn't found in the given input String
+	 * @return a two-element array [beforeDelimiter, afterDelimiter], or
+	 *         {@code null} if the delimiter was not found
 	 */
 	public static String[] split(String toSplit, String delimiter) {
 		if (!hasLength(toSplit) || !hasLength(delimiter)) {
@@ -1153,7 +1186,14 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		String afterDelimiter = toSplit.substring(offset + delimiter.length());
 		return new String[] {beforeDelimiter, afterDelimiter};
 	}
-	
+
+	/**
+	 * Splits the given string using the given regex.
+	 *
+	 * @param toSplit the string to split
+	 * @param regex   the regex delimiter
+	 * @return an array of split strings (empty array if input is blank)
+	 */
 	public static String[] splits(String toSplit, String regex) {
 		if (!hasLength(toSplit) || !hasLength(regex)) {
 			return new String[] {};
@@ -1161,11 +1201,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return toSplit.split(regex);
 	}
 
-	/*
-	 * 去除最后一个字符
-	 * 
-	 * @param str
-	 * @return
+	/**
+	 * Removes the last character from the given string.
+	 *
+	 * @param str the input string
+	 * @return the string with the last character removed
 	 */
 	public static String removeLast(String str) {
 		if (isNull(str)) {
@@ -1175,11 +1215,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	}
 
-	/*
-	 * 为字符串的每个元素增加单引号，供sql语句调用 如字符串"123,567"变成"'123','567'"
-	 * 
-	 * @param str
-	 * @return
+	/**
+	 * Wraps each comma-separated element in single quotes for SQL usage.
+	 * For example, "123,567" becomes "'123','567'".
+	 *
+	 * @param str the input string
+	 * @return the quoted string
 	 */
 	public static String addQuotation(String str) {
 		if (str == null) {
@@ -1197,41 +1238,39 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	}
 
-	/*
-	 * list转string数组
-	 * 
-	 * @param list
-	 * @return String[]
+	/**
+	 * Converts a List of Strings to a String array.
+	 *
+	 * @param list the list to convert
+	 * @return the String array
 	 */
 	public static String[] listToArray(List<String> list) {
 		String[] strs = new String[list.size()];
 		return list.toArray(strs);
 	}
 
-	/*
-	 * list转string字符串,以符号分隔
-	 * 
-	 * @param list
-	 * @param separator
-	 * @return String
+	/**
+	 * Converts a List of Strings to a single delimited String.
+	 *
+	 * @param list      the list to convert
+	 * @param separator the separator between elements
+	 * @return the joined String
 	 */
 	public static String listToString(List<String> list, String separator) {
 		return StringUtils.join(listToArray(list), separator);
 	}
 
-	/*
-	 * 生成随即密码
-	 * 
-	 * @author 来自网上
-	 * @param pwd_len
-	 *            生成的密码的总长度
-	 * @return 密码的字符串
+	/**
+	 * Generates a random alphanumeric password of the specified length.
+	 *
+	 * @param pwd_len the desired password length
+	 * @return the generated password string
 	 */
 	public static String genRandomNum(int pwd_len) {
-		// 36是因为数组是从0开始的，26个字母+10个数字 + 下划线
+		// 36 because array starts from 0, 26 letters + 10 digits + underscore
 		final int maxNum = 37;
-		int i; // 生成的随机数
-		int count = 0; // 生成的密码的长度
+		int i; // generated random number
+		int count = 0; // generated password length
 		char[] str = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 				'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
 				'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8',
@@ -1239,8 +1278,7 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		StringBuilder pwd = new StringBuilder("");
 		Random r = new Random();
 		while (count < pwd_len) {
-			// 生成随机数，取绝对值，防止生成负数，
-			i = Math.abs(r.nextInt(maxNum)); // 生成的数最大为36-1
+			i = Math.abs(r.nextInt(maxNum));
 			if (i >= 0 && i < str.length) {
 				pwd.append(str[i]);
 				count++;
@@ -1249,11 +1287,11 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return pwd.toString();
 	}
 
-	/*
-	 * 将传入字符串改为非NULL值.
-	 * 
-	 * @param str
-	 * @return 传入NULL,返回空"".
+	/**
+	 * Returns an empty string if the given string is null.
+	 *
+	 * @param str the input string
+	 * @return the input string, or "" if it was null
 	 */
 	public static String killNull(String str) {
 		if (str == null) {
@@ -1262,57 +1300,56 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return str;
 	}
 
-	/*
-	 * 
-	 * @description: 圆括号()包裹
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @date : 2014-4-29
-	 * @time : 下午03:11:57
-	 * @param source
-	 * @return
+	/**
+	 * Wraps the source string in parentheses.
+	 *
+	 * @param source the input string
+	 * @return the string wrapped in "(", or {@code null} if source is null
 	 */
 	public static String parentheses(String source) {
 		return (source != null ? "(" + source + ")" : null);
 	}
 
-	/*
-	 * 
-	 * @description: 方括号[]包裹
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @date : 2014-4-29
-	 * @time : 下午03:11:57
-	 * @param source
-	 * @return
+	/**
+	 * Wraps the source string in square brackets.
+	 *
+	 * @param source the input string
+	 * @return the string wrapped in "[", or {@code null} if source is null
 	 */
 	public static String brackets(String source) {
 		return (source != null ? "[" + source + "]" : null);
 	}
 
+	/**
+	 * Wraps the source string in double quotes.
+	 *
+	 * @param source the input string
+	 * @return the string wrapped in double quotes, or {@code null} if source
+	 *         is null
+	 */
 	public static String ditto(String source) {
 		return (source != null ? "\"" + source + "\"" : null);
 	}
 
-	/*
-	 * Quote the given String with single quotes.
-	 * 
-	 * @param str
-	 *            the input String (e.g. "myString")
-	 * @return the quoted String (e.g. "'myString'"), or
-	 *         <code>null<code> if the input was <code>null</code>
+	/**
+	 * Wraps the given String with single quotes.
+	 *
+	 * @param str the input String (e.g. "myString")
+	 * @return the quoted String (e.g. "'myString'"), or {@code null} if the
+	 *         input was null
 	 */
 	public static String quote(String str) {
 		return (str != null ? "'" + str + "'" : null);
 	}
 
-	/*
-	 * 
-	 * @description: 将String集合元素用'包围，并拼接
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @date : 2014-4-29
-	 * @time : 下午02:13:09
-	 * @param list
-	 * @param separator
-	 * @return
+	/**
+	 * Wraps each element in the given String array with single quotes and
+	 * joins them with the given separator.
+	 *
+	 * @param array     the String array
+	 * @param separator the separator between quoted elements
+	 * @return the quoted and joined string, or "" if the array is null or
+	 *         empty
 	 */
 	public static String quote(String[] array, String separator) {
 		if (null != array && array.length != 0) {
@@ -1327,28 +1364,23 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	}
 
-	/*
-	 * Turn the given Object into a String with single quotes if it is a String;
-	 * keeping the Object as-is else.
-	 * 
-	 * @param obj
-	 *            the input Object (e.g. "myString")
-	 * @return the quoted String (e.g. "'myString'"), or the input object as-is
-	 *         if not a String
+	/**
+	 * Turns the given Object into a String with single quotes if it is a
+	 * String; keeping the Object as-is otherwise.
+	 *
+	 * @param obj the input Object (e.g. "myString")
+	 * @return the quoted String (e.g. "'myString'"), or the input object
+	 *         as-is if not a String
 	 */
 	public static Object quoteIfString(Object obj) {
 		return (obj instanceof String ? quote((String) obj) : obj);
 	}
 
-	/*
-	 * 
-	 * @param string
-	 * @return
-	 * @description： 把一个字符的非Alpha字符都去掉,String string = "1\r\n1\r\n";-->结果："11";
-	 * @return: String
-	 * @method: trimToAlphaString
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @version: 2010-12-15 下午09:06:02
+	/**
+	 * Strips all non-alphanumeric characters from the given string.
+	 *
+	 * @param string the input string
+	 * @return the string with only word characters remaining
 	 */
 	public static String trimToAlphaString(String string) {
 		if (string == null || string.isEmpty()) {
@@ -1357,17 +1389,12 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return string.replaceAll("[^\\w]", "");
 	}
 
-	/*
-	 * 
-	 * @param string
-	 * @return
-	 * @description： 把一个字符的非Alpha字符都去掉，并返回每个字符的数组,String string =
-	 *               "1\r\n1\r\n";-->结果：new String[]{"1","1"};
-	 * 
-	 * @return: String[]
-	 * @method: trimToAlphaStrings
-	 * @author [@Loong Wan](https://github.com/loong10k)
-	 * @version: 2010-12-15 下午09:06:31
+	/**
+	 * Strips all non-alphanumeric characters from the given string and
+	 * returns each remaining character as an element in an array.
+	 *
+	 * @param string the input string
+	 * @return an array of single-character strings
 	 */
 	public static String[] trimToAlphaStrings(String string) {
 		if (string == null || string.isEmpty()) {
@@ -1381,6 +1408,13 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return strs;
 	}
 
+	/**
+	 * Trims the given string and returns {@code null} if the result is
+	 * empty.
+	 *
+	 * @param str the input string
+	 * @return the trimmed string, or {@code null} if it was blank
+	 */
 	public static String trimToString(String str) {
 		if (str == null || str.trim().length() == 0) {
 			return null;
@@ -1388,5 +1422,5 @@ public abstract class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return str.trim();
 		}
 	}
-	
+
 }

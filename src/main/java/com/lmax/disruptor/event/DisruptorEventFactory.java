@@ -17,8 +17,23 @@ package com.lmax.disruptor.event;
 
 import com.lmax.disruptor.EventFactory;
 
+/**
+ * Factory that creates new {@link DisruptorEvent} instances for the LMAX
+ * Disruptor ring buffer pre-allocation.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see DisruptorEvent
+ * @see EventFactory
+ */
 public class DisruptorEventFactory implements EventFactory<DisruptorEvent> {
 
+	/**
+	 * Creates and returns a new {@link DisruptorEvent} instance with the
+	 * current thread set as the event source.
+	 *
+	 * @return a new {@code DisruptorEvent} instance
+	 */
 	@Override
 	public DisruptorEvent newInstance() {
 		return new DisruptorEvent(Thread.currentThread());

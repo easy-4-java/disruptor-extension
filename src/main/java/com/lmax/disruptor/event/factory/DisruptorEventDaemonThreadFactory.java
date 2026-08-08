@@ -19,13 +19,29 @@ import lombok.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * {@link ThreadFactory} that creates daemon threads for the Disruptor event
+ * processing. Daemon threads do not prevent the JVM from shutting down.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see ThreadFactory
+ * @see Thread#setDaemon(boolean)
+ */
 public class DisruptorEventDaemonThreadFactory implements ThreadFactory {
-	
+
+	/**
+	 * Creates a new daemon {@link Thread} to execute the given
+	 * {@link Runnable}.
+	 *
+	 * @param r the runnable to execute
+	 * @return a new daemon thread
+	 */
 	@Override
     public Thread newThread(@NonNull Runnable r) {
 		Thread t = new Thread(r);
 		t.setDaemon(true);
 		return t;
 	}
-	
+
 }

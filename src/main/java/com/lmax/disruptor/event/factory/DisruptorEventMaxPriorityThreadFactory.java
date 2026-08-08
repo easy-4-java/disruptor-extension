@@ -19,13 +19,29 @@ import lombok.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * {@link ThreadFactory} that creates threads running at
+ * {@link Thread#MAX_PRIORITY} for latency-sensitive Disruptor event
+ * processing.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see ThreadFactory
+ * @see Thread#MAX_PRIORITY
+ */
 public class DisruptorEventMaxPriorityThreadFactory implements ThreadFactory {
-	
+
+	/**
+	 * Creates a new {@link Thread} with maximum priority.
+	 *
+	 * @param r the runnable to execute
+	 * @return a new max-priority thread
+	 */
 	@Override
     public Thread newThread(@NonNull Runnable r) {
 		Thread t = new Thread(r);
 		t.setPriority(Thread.MAX_PRIORITY);
 		return t;
 	}
-	
+
 }
