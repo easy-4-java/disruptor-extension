@@ -20,8 +20,25 @@ import java.util.concurrent.ThreadFactory;
 import lombok.NonNull;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link ThreadFactory} that creates threads with an
+ * {@link Thread.UncaughtExceptionHandler} that logs uncaught exceptions via
+ * SLF4J, using the thread name as the logger name.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see ThreadFactory
+ * @see Thread#setUncaughtExceptionHandler
+ */
 public class DisruptorEventLoggerThreadFactory implements ThreadFactory {
 
+	/**
+	 * Creates a new {@link Thread} with an uncaught-exception handler that
+	 * logs errors using SLF4J.
+	 *
+	 * @param r the runnable to execute
+	 * @return a new thread with logging exception handler
+	 */
 	@Override
 	public Thread newThread(@NonNull Runnable r) {
 		Thread t = new Thread(r);

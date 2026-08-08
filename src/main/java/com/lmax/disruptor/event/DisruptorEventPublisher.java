@@ -15,8 +15,25 @@
  */
 package com.lmax.disruptor.event;
 
+/**
+ * Strategy interface for publishing a {@link DisruptorEvent} to the LMAX
+ * Disruptor ring buffer.
+ *
+ * <p>Implementations typically delegate to
+ * {@link com.lmax.disruptor.dsl.Disruptor#publishEvent}.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see DisruptorEvent
+ * @see DisruptorEventPublisherAware
+ */
 public interface DisruptorEventPublisher {
 
+	/**
+	 * Publishes the given event to the Disruptor ring buffer.
+	 *
+	 * @param event the event to publish (must not be {@code null})
+	 */
 	void publishEvent(DisruptorEvent event);
-	
+
 }

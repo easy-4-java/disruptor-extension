@@ -18,13 +18,33 @@ package com.lmax.disruptor.event.translator;
 import com.lmax.disruptor.EventTranslatorThreeArg;
 import com.lmax.disruptor.event.DisruptorEvent;
 
+/**
+ * {@link EventTranslatorThreeArg} implementation that populates a
+ * pre-allocated ring-buffer {@link DisruptorEvent} from a topic, tag,
+ * and message-key triple.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see EventTranslatorThreeArg
+ * @see DisruptorEvent
+ */
 public class DisruptorEventThreeArgTranslator implements EventTranslatorThreeArg<DisruptorEvent, String, String, String> {
 
+	/**
+	 * Translates a topic, tag, and key into the pre-allocated ring-buffer
+	 * event.
+	 *
+	 * @param dtEevent the pre-allocated event in the ring buffer
+	 * @param sequence the sequence number of the event being published
+	 * @param event    the topic to set
+	 * @param tag      the tag to set
+	 * @param key      the message identifier to set
+	 */
 	@Override
 	public void translateTo(DisruptorEvent dtEevent, long sequence, String event, String tag, String key) {
 		dtEevent.setTopic(event);
 		dtEevent.setTag(tag);
 		dtEevent.setMessageId(key);
 	}
-	
+
 }

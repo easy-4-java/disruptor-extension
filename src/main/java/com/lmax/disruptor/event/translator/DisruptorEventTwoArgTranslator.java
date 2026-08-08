@@ -18,13 +18,31 @@ package com.lmax.disruptor.event.translator;
 import com.lmax.disruptor.EventTranslatorTwoArg;
 import com.lmax.disruptor.event.DisruptorEvent;
 
+/**
+ * {@link EventTranslatorTwoArg} implementation that populates a
+ * pre-allocated ring-buffer {@link DisruptorEvent} from a topic and tag
+ * pair. The message identifier is set to the Disruptor sequence number.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see EventTranslatorTwoArg
+ * @see DisruptorEvent
+ */
 public class DisruptorEventTwoArgTranslator implements EventTranslatorTwoArg<DisruptorEvent, String, String> {
 
+	/**
+	 * Translates a topic and tag into the pre-allocated ring-buffer event.
+	 *
+	 * @param dtEevent the pre-allocated event in the ring buffer
+	 * @param sequence the sequence number of the event being published
+	 * @param event    the topic to set
+	 * @param tag      the tag to set
+	 */
 	@Override
 	public void translateTo(DisruptorEvent dtEevent, long sequence, String event, String tag) {
 		dtEevent.setTopic(event);
 		dtEevent.setTag(tag);
 		dtEevent.setMessageId(String.valueOf(sequence));
 	}
-	
+
 }

@@ -18,6 +18,20 @@ import org.slf4j.LoggerFactory;
 import com.lmax.disruptor.exception.EventHandleException;
 import com.lmax.disruptor.util.StringUtils;
 
+/**
+ * A simple INI-format configuration parser that supports sections and
+ * key-value pairs. Sections are declared with square brackets
+ * (e.g. {@code [sectionName]}) and key-value pairs are separated by
+ * {@code =} or {@code :}.
+ *
+ * <p>Lines beginning with {@code #} or {@code ;} are treated as
+ * comments. Continuation lines are supported via trailing backslashes.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 3.0.0
+ * @see Ini.Section
+ * @see EventHandlerDefinition
+ */
 public class Ini implements Map<String, Ini.Section> {
 
     private static transient final Logger log = LoggerFactory.getLogger(Ini.class);
