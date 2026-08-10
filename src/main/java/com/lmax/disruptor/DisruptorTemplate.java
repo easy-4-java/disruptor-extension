@@ -29,7 +29,7 @@ import com.lmax.disruptor.event.DisruptorEvent;
  * populate a {@link DisruptorEvent} before delegating to the
  * underlying Disruptor.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see Disruptor
  * @see DisruptorEvent

@@ -19,7 +19,7 @@ package com.lmax.disruptor.event;
  * Interface to be implemented by any component that wishes to be notified
  * of the {@link DisruptorEventPublisher} it runs in.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see DisruptorEventPublisher
  */

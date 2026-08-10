@@ -33,7 +33,7 @@ import com.lmax.disruptor.event.handler.DisruptorHandler;
  * receives this chain instance and may invoke {@code doHandler} on it
  * to continue processing.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see HandlerChain
  * @see DisruptorHandler

@@ -21,7 +21,7 @@ import com.lmax.disruptor.EventFactory;
  * Factory that creates new {@link DisruptorEvent} instances for the LMAX
  * Disruptor ring buffer pre-allocation.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see DisruptorEvent
  * @see EventFactory

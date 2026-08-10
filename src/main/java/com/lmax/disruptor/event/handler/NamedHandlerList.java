@@ -26,7 +26,7 @@ import com.lmax.disruptor.event.handler.chain.HandlerChain;
  * handler list within the handler chain manager.
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see DisruptorHandler
  * @see HandlerChain

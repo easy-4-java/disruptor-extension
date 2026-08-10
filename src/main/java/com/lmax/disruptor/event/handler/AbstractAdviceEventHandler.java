@@ -29,7 +29,7 @@ import com.lmax.disruptor.event.handler.chain.HandlerChain;
  * cross-cutting behaviour such as logging, metrics, or error handling.</p>
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see AbstractEnabledEventHandler
  * @see AbstractPathMatchEventHandler

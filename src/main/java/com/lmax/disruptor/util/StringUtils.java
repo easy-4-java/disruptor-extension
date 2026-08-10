@@ -26,7 +26,7 @@ import java.util.*;
  *
  * <p>Methods in this class are stateless and thread-safe.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see org.apache.commons.lang3.StringUtils
  */

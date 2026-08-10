@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadFactory;
  * Default {@link ThreadFactory} for the Disruptor event processing. Creates
  * standard (non-daemon, default-priority) threads.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see ThreadFactory
  */

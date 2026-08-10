@@ -30,7 +30,7 @@ import com.lmax.disruptor.event.DisruptorEvent;
  * are configured, the handler passes through immediately.
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see AbstractAdviceEventHandler
  * @see PathProcessor

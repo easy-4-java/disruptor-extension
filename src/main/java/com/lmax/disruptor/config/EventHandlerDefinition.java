@@ -27,7 +27,7 @@ import java.util.Map;
  * <p>Used by the INI-based configuration mechanism to map Ant-style
  * event patterns to comma-separated lists of handler names.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see Ini
  * @see com.lmax.disruptor.annotation.EventRule

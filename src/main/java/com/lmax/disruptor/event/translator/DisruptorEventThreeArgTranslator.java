@@ -23,7 +23,7 @@ import com.lmax.disruptor.event.DisruptorEvent;
  * pre-allocated ring-buffer {@link DisruptorEvent} from a topic, tag,
  * and message-key triple.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see EventTranslatorThreeArg
  * @see DisruptorEvent

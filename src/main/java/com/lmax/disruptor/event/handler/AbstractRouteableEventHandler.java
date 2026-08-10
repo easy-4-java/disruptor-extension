@@ -31,7 +31,7 @@ import com.lmax.disruptor.exception.EventHandleException;
  * selected at runtime based on the event's routing expression.
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see AbstractEnabledEventHandler
  * @see HandlerChainResolver

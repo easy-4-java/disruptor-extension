@@ -24,7 +24,7 @@ import com.lmax.disruptor.event.DisruptorEvent;
  *
  * <p>Register this hook via {@link Runtime#addShutdownHook(Thread)}.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see Disruptor#shutdown()
  * @see Runtime#addShutdownHook(Thread)

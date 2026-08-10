@@ -22,7 +22,7 @@ package com.lmax.disruptor.event;
  * <p>Implementations typically delegate to
  * {@link com.lmax.disruptor.dsl.Disruptor#publishEvent}.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see DisruptorEvent
  * @see DisruptorEventPublisherAware

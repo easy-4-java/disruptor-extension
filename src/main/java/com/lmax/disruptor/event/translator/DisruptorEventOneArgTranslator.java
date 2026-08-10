@@ -26,7 +26,7 @@ import com.lmax.disruptor.util.StringUtils;
  * <p>If the bind event's {@code messageId} is blank, the Disruptor
  * {@code sequence} number is used as the fallback message identifier.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see EventTranslatorOneArg
  * @see DisruptorEvent

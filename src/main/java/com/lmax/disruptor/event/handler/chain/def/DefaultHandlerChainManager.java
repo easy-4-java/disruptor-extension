@@ -38,7 +38,7 @@ import com.lmax.disruptor.util.StringUtils;
  * <p>Handlers are registered by name and then assembled into named chains
  * via comma-separated definitions (e.g. {@code "handlerA,handlerB"}).</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see HandlerChainManager
  * @see DefaultNamedHandlerList

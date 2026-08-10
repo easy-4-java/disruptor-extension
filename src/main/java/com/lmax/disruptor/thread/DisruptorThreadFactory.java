@@ -33,7 +33,7 @@ import java.util.function.BiFunction;
  *       {@link Thread#MAX_PRIORITY} named "Disruptor-Max-Priority-Thread"</li>
  * </ul>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see ThreadFactory
  * @see DisruptorWaitStrategy

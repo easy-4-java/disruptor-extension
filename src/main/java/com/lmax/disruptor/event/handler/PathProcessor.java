@@ -22,7 +22,7 @@ import com.lmax.disruptor.event.DisruptorEvent;
  * filtering.
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see AbstractPathMatchEventHandler
  * @see com.lmax.disruptor.util.AntPathMatcher

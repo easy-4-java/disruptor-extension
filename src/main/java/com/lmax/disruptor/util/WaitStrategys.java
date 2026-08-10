@@ -28,7 +28,7 @@ import com.lmax.disruptor.YieldingWaitStrategy;
  * <p>These constants allow callers to select a wait strategy by name
  * without constructing new objects each time.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see WaitStrategy
  * @see DisruptorWaitStrategy

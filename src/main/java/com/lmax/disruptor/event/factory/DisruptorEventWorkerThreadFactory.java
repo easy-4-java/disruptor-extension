@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadFactory;
  * auto-incrementing counter suffix. Useful for distinguishing individual
  * consumer threads in thread dumps and log output.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see ThreadFactory
  */

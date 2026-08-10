@@ -29,7 +29,7 @@ import com.lmax.disruptor.event.handler.chain.ProxiedHandlerChain;
  * <p>This class bridges the LMAX Disruptor {@link EventHandler} SPI with
  * the handler-chain framework provided by this extension library.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see EventHandler
  * @see AbstractRouteableEventHandler

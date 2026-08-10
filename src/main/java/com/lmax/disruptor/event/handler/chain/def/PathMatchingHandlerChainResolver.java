@@ -32,7 +32,7 @@ import com.lmax.disruptor.event.handler.chain.HandlerChainResolver;
  * <p>When a chain name pattern matches the event's routing expression,
  * the corresponding handler chain is proxied and returned.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see HandlerChainResolver
  * @see HandlerChainManager

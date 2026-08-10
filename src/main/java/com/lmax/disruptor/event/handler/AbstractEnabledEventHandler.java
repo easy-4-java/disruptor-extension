@@ -28,7 +28,7 @@ import com.lmax.disruptor.event.handler.chain.HandlerChain;
  * being processed by this handler.
  *
  * @param <T> the DisruptorEvent subtype
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see AbstractNameableEventHandler
  * @see AbstractAdviceEventHandler

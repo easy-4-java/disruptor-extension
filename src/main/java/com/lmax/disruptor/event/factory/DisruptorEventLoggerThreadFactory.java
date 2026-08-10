@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * {@link Thread.UncaughtExceptionHandler} that logs uncaught exceptions via
  * SLF4J, using the thread name as the logger name.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see ThreadFactory
  * @see Thread#setUncaughtExceptionHandler

@@ -24,7 +24,7 @@ import java.util.function.Function;
  * {@link WaitStrategy} instance. Provides a convenient way to select the
  * desired trade-off between CPU consumption and latency.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see WaitStrategy
  * @see BlockingWaitStrategy
