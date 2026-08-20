@@ -21,7 +21,7 @@ import lombok.Setter;
 
 import java.util.EventObject;
 
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Core event data carrier exchanged through the LMAX Disruptor ring buffer.
@@ -42,7 +42,7 @@ import com.lmax.disruptor.util.StringUtils;
  *   <li>{@code tag} -- message filtering within a topic</li>
  * </ul>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see DisruptorEventFactory
  * @see DisruptorEventPublisher

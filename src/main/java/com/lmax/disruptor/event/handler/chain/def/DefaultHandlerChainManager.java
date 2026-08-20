@@ -29,7 +29,7 @@ import com.lmax.disruptor.event.handler.Nameable;
 import com.lmax.disruptor.event.handler.NamedHandlerList;
 import com.lmax.disruptor.event.handler.chain.HandlerChain;
 import com.lmax.disruptor.event.handler.chain.HandlerChainManager;
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Default {@link HandlerChainManager} implementation backed by
@@ -38,7 +38,7 @@ import com.lmax.disruptor.util.StringUtils;
  * <p>Handlers are registered by name and then assembled into named chains
  * via comma-separated definitions (e.g. {@code "handlerA,handlerB"}).</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see HandlerChainManager
  * @see DefaultNamedHandlerList
@@ -150,7 +150,9 @@ public class DefaultHandlerChainManager implements HandlerChainManager<Disruptor
     	if(trimToNull == null){
     		return null;
     	}
-    	String[] split = StringUtils.splits(trimToNull, DEFAULT_CHAIN_DEFINATION_DELIMITER_CHAR);
+    	String[] split = (StringUtils.isEmpty(trimToNull) || StringUtils.isEmpty(DEFAULT_CHAIN_DEFINATION_DELIMITER_CHAR))
+    		? new String[0]
+    		: trimToNull.split(DEFAULT_CHAIN_DEFINATION_DELIMITER_CHAR);
     	for (int i = 0; i < split.length; i++) {
     		split[i] = StringUtils.trimToNull(split[i]);
 		}

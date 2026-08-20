@@ -58,9 +58,9 @@
         <maven.version>3.9.16</maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Dependency versions -->
-        <checker-qual.version>3.48.3</checker-qual.version>
+        <checker-qual.version>3.55.1</checker-qual.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
-        <disruptor.version>4.0.0</disruptor.version>
+        <disruptor.version>3.4.4</disruptor.version>
         <junit-jupiter.version>6.1.0</junit-jupiter.version>
         <junit.version>4.13.2</junit.version>
         <lombok.version>1.18.46</lombok.version>
@@ -81,7 +81,7 @@
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-		<commons-lang.version>2.6</commons-lang.version></properties>
+    </properties>
 
     <!-- 依赖版本统一管理（dependencyManagement） -->
     <dependencyManagement>
