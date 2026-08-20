@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.lmax.disruptor.exception.EventHandleException;
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A simple INI-format configuration parser that supports sections and
@@ -27,7 +27,7 @@ import com.lmax.disruptor.util.StringUtils;
  * <p>Lines beginning with {@code #} or {@code ;} are treated as
  * comments. Continuation lines are supported via trailing backslashes.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see Ini.Section
  * @see EventHandlerDefinition

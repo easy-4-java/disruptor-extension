@@ -17,7 +17,7 @@ package com.lmax.disruptor.event.translator;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.event.DisruptorEvent;
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * {@link EventTranslatorOneArg} implementation that copies all fields from a
@@ -26,7 +26,7 @@ import com.lmax.disruptor.util.StringUtils;
  * <p>If the bind event's {@code messageId} is blank, the Disruptor
  * {@code sequence} number is used as the fallback message identifier.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see EventTranslatorOneArg
  * @see DisruptorEvent
@@ -46,7 +46,7 @@ public class DisruptorEventOneArgTranslator implements EventTranslatorOneArg<Dis
 		event.setTopic(bind.getTopic());
 		event.setNamespace(bind.getNamespace());
 		event.setTag(bind.getTag());
-		event.setMessageId(StringUtils.hasText(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
+		event.setMessageId(StringUtils.isNotBlank(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
 		event.setPayload(bind.getPayload());
 		event.setSequence(sequence);
 	}

@@ -33,7 +33,7 @@ class DisruptorEventDispatcherTests {
     void shouldDispatchEvent() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
 
-        DisruptorHandler<DisruptorEvent> handler = new DisruptorHandler<>() {
+        DisruptorHandler<DisruptorEvent> handler = new DisruptorHandler<DisruptorEvent>() {
             @Override
             public void doHandler(DisruptorEvent event, HandlerChain<DisruptorEvent> handlerChain) throws Exception {
                 counter.incrementAndGet();
@@ -63,7 +63,7 @@ class DisruptorEventDispatcherTests {
     void shouldNotDispatchWhenDisabled() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
 
-        DisruptorHandler<DisruptorEvent> handler = new DisruptorHandler<>() {
+        DisruptorHandler<DisruptorEvent> handler = new DisruptorHandler<DisruptorEvent>() {
             @Override
             public void doHandler(DisruptorEvent event, HandlerChain<DisruptorEvent> handlerChain) throws Exception {
                 counter.incrementAndGet();
