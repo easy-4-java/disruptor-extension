@@ -4,8 +4,9 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://github.com/easy-4-java/disruptor-extension) [![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-> LMAX Disruptor 的 JDK 8 版本线扩展：处理链、事件分发器、发布模板、`@EventRule`
-> 路由以及线程 / 等待策略工厂。
+> LMAX Disruptor 扩展库：处理链、事件分发器、发布模板、`@EventRule` 路由以及线程 / 等待策略工厂。
+> 维护 `feature/1.0.x`（JDK 8 + Disruptor 3.4.4）、`feature/2.0.x`（JDK 17 + Disruptor 3.4.4）、
+> `feature/3.0.x`（JDK 21 + Disruptor 4.0.0）三条版本线。
 
 ## 目录
 
@@ -82,17 +83,17 @@
 
 | 要求 | 版本 / 说明 |
 | :--- | :--- |
-| JDK | 21+ |
-| Maven | 3.0+（enforcer 强制；项目内置 Maven Wrapper `./mvnw`） |
-| LMAX Disruptor | `com.lmax:disruptor` 3.4.4（由本 pom 管理） |
+| JDK | 21+（当前 `feature/3.0.x` 分支；其他分支见下表） |
+| Maven | 4.0+（enforcer 强制；项目使用 Maven 4.1.0 modelVersion） |
+| LMAX Disruptor | `com.lmax:disruptor` 4.0.0（3.0.x 线；1.0.x / 2.0.x 线使用 3.4.4） |
 
-版本线：
+版本线矩阵：
 
-| 分支 | JDK | 版本 |
-| :--- | :--- | :--- |
-| `feature/1.0.x` | 8 | `1.0.x.*` |
-| `feature/2.0.x` | 17 | `2.0.x.*` |
-| `feature/3.0.x` | 21 | `3.0.x.*` |
+| 分支 | JDK | 字节码版本 | 当前 SNAPSHOT 版本 | Disruptor | 编译参数 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `feature/1.0.x` | 8 | 52 | `1.0.x.20260630-SNAPSHOT` | 3.4.4（`javax.ws.rs` 命名空间） | `maven.compiler.source/target = 1.8` |
+| `feature/2.0.x` | 17 | 61 | `2.0.x.20260630-SNAPSHOT` | 3.4.4 | `maven.compiler.release = 17` + `--add-opens` |
+| `feature/3.0.x` | 21 | 65 | `3.0.x.20260630-SNAPSHOT` | 4.0.0（`jakarta.ws.rs` 命名空间） | `maven.compiler.release = 21` + `--add-opens` |
 
 ## 4. 架构与模块
 
@@ -405,32 +406,19 @@ System.out.println(event.getRouteExpression()); // "prod/order/created"
 
 ## 10. 版本与分支
 
-| 分支 | JDK | 版本 | 说明 |
+| 分支 | JDK | 当前 SNAPSHOT 版本 | 说明 |
 | :--- | :--- | :--- | :--- |
-| `feature/1.0.x` | 8 | `1.0.x.*` | 当前分支，JDK 8 基线，维护中 |
-| `feature/2.0.x` | 17 | `2.0.x.*` | JDK 17 版本线 |
-| `feature/3.0.x` | 21 | `3.0.x.*` | JDK 21 版本线 |
+| `feature/1.0.x` | 8 | `1.0.x.20260630-SNAPSHOT` | JDK 8 基线（`source/target=1.8`，Disruptor 3.4.4），维护 LTS |
+| `feature/2.0.x` | 17 | `2.0.x.20260630-SNAPSHOT` | JDK 17 基线（`release=17`，Disruptor 3.4.4），维护 LTS |
+| `feature/3.0.x` | 21 | `3.0.x.20260630-SNAPSHOT` | **当前分支**，JDK 21 基线（`release=21`，Disruptor 4.0.0），主力开发线 |
 
-维护策略：`1.0.x` 版本线接收针对 JDK 8 基线的缺陷修复与兼容性更新；面向新 JDK 的
-新特性在 `2.0.x` / `3.0.x` 版本线开发。发布物通过阿里云 Maven 仓库与 GitHub
-Releases 分发；项目尚未发布到 Maven Central。
+维护策略：Bug 修复与安全补丁按 1.0.x → 2.0.x → 3.0.x 顺序自底向上合入；面向
+现代 JDK 的新特性优先在 `feature/3.0.x` 开发，然后视兼容性需要反向移植。发布物
+通过阿里云 Maven 仓库与 GitHub Releases 分发；项目尚未发布到 Maven Central。
 
 ## 11. 贡献与许可
 
 欢迎通过 GitHub Issue 或 Pull Request 参与贡献。
 
 本项目基于 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt) 许可。
-
-## 12. 缺陷修复与质量改进
-
-下列问题由 CodeGraph 语义审计流程识别，并已在本版本中修复。每条目均说明原始缺陷、影响面以及所采用的具体修复方案。
-
-| # | 严重度 | 文件 | 描述 / 修复方案 |
-|---|---|---|---|
-| 1 | 中 | [DisruptorTemplate.java](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/src/main/java/com/lmax/disruptor/DisruptorTemplate.java#L82-L110) | **高并发下 messageId 冲突。** 原 `publishEvent(String, String, Object)` 与 `publishEvent(String, String, String, Object)` 两个重载分别存在 ID 未赋值或使用 `System.currentTimeMillis()` 的情况 —— 毫秒级时钟在同一 tick 内批量发布的事件将得到完全相同的 ID。**修复：** 两个重载均改为赋值 `UUID.randomUUID().toString()`，即便在饱和吞吐下仍能保证 ID 全局唯一。 |
-| 2 | 中 | [EventHandleException.java](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/src/main/java/com/lmax/disruptor/exception/EventHandleException.java#L35-L48) | **`EventHandleException(Exception)` 构造函数丢失 cause 堆栈。** 单参构造函数原实现调用 `super(e.getMessage(), null)`，导致根因异常被直接丢弃 —— 在日志聚合与 APM 工具中无法逐层定位根因。**修复：** 改为 `super(e.getMessage(), e)`，原始受检异常通过 `getCause()` 完整保留。 |
-| 3 | 🔴 高 | [pom.xml](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/pom.xml#L297-L300) | **JaCoCo 覆盖率从未真正被度量。** `maven-surefire-plugin` 自定义了 `<argLine>`，但未加入 JaCoCo 用于注入 `-javaagent` 的 `@{argLine}` 占位符。其结果是即便测试全部执行，覆盖率报告仍显示 0% 插桩。**修复：** 在原 `-Xmx1024m -Dfile.encoding=UTF-8` 之前追加 `@{argLine}`，由 Surefire 在运行时合并 JaCoCo 的代理参数。 |
-| 4 | 低 | [pom.xml](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/pom.xml#L45-L52) | **未使用的 `commons-lang.version = 2.6` 属性残留。** 该属性指向的是已从 classpath 移除的老版本 `commons-lang:commons-lang`（2.x 系列）；实际使用并被声明的是 `commons-lang3.version = 3.20.0`（`org.apache.commons:commons-lang3`）。**修复：** 删除悬空属性，消除维护者误读。 |
-| 5 | 低 | `thread/` 与 `event.factory/` 两套包 | **两套 ThreadFactory 并行设计且不支持业务名前缀。** `DisruptorThreadFactory`（枚举式）与 `DisruptorEvent*ThreadFactory`（`event.factory/` 下的具体类）承担重叠职责，且两者均不允许使用者注入自定义线程名称前缀，从而在同一 JVM 启动多个 `DisruptorTemplate` 实例时难以区分各池线程。**状态：** 作为后续增强项跟踪，规划在下一次小版本中提供接收 `namePrefix + index` 的 Builder。 |
-| 6 | 低 | `ProxiedHandlerChain` | **`currentPosition` 游标默认单消费者假设。** 链内部持有的嵌套迭代器游标非线程安全，设计初衷即服务于 Disruptor 生命周期驱动的单 `EventHandler` 线程；在多 dispatcher 复用同一链实例时将产生未定义的执行序。**修复（文档化）：** 该设计约束已在本 README 与 [架构文档 §5 附录](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/product-docs/disruptor-extension/8%E3%80%81disruptor-extension-Architecture.zh_CN.md#5-附录核心文件索引--设计说明) 中显式声明。 |
 

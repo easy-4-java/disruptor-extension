@@ -33,17 +33,41 @@ import com.lmax.disruptor.event.handler.DisruptorHandler;
  * receives this chain instance and may invoke {@code doHandler} on it
  * to continue processing.</p>
  *
+ * <h3>Thread Safety &amp; Single-Consumer Contract</h3>
+ * <p><strong>Instances of this class are <em>not</em> thread-safe.</strong>
+ * The internal {@code currentPosition} cursor is a plain mutable {@code int}
+ * without any synchronization or atomic wrapper; it is designed to be
+ * advanced sequentially by the single {@code EventHandler} thread that the
+ * LMAX Disruptor lifecycle drives. Reusing the <em>same</em>
+ * {@code ProxiedHandlerChain} instance across multiple dispatchers or
+ * consumer threads will produce undefined handler ordering and is
+ * explicitly unsupported. Each independent {@link DisruptorEventDispatcher}
+ * obtains its own freshly-constructed chain instance on every event pass,
+ * which satisfies this contract by construction.</p>
+ *
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 3.0.0
  * @see HandlerChain
  * @see DisruptorHandler
+ * @see DisruptorEventDispatcher
  */
 public class ProxiedHandlerChain implements HandlerChain<DisruptorEvent> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProxiedHandlerChain.class);
 
-    private ProxiedHandlerChain originalChain;
+    private HandlerChain<DisruptorEvent> originalChain;
     private List<DisruptorHandler<DisruptorEvent>> handlers;
+
+    /**
+     * Sequential cursor that points to the next handler to invoke.
+     * <p><strong>Single-threaded use only.</strong> This field is
+     * intentionally a plain {@code int} (not an {@code AtomicInteger})
+     * because the Disruptor model guarantees each chain instance is
+     * owned by exactly one event-handler thread. Sharing a chain across
+     * threads would require external synchronization that the author
+     * deliberately avoids so as not to pay a volatile-read tax on the
+     * hot path.</p>
+     */
     private int currentPosition = 0;
 
     /**
@@ -64,7 +88,7 @@ public class ProxiedHandlerChain implements HandlerChain<DisruptorEvent> {
      * @param handlers the list of handlers to execute in order
      * @throws NullPointerException if {@code orig} is {@code null}
      */
-    public ProxiedHandlerChain(ProxiedHandlerChain orig, List<DisruptorHandler<DisruptorEvent>> handlers) {
+    public ProxiedHandlerChain(HandlerChain<DisruptorEvent> orig, List<DisruptorHandler<DisruptorEvent>> handlers) {
         if (orig == null) {
             throw new NullPointerException("original HandlerChain cannot be null.");
         }

@@ -21,7 +21,7 @@ import lombok.Setter;
 
 import java.util.EventObject;
 
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Core event data carrier exchanged through the LMAX Disruptor ring buffer.

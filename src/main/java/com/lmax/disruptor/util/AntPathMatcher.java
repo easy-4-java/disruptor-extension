@@ -1,6 +1,8 @@
 package com.lmax.disruptor.util;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -77,6 +79,25 @@ public class AntPathMatcher implements PathMatcher {
     private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<>(256);
 
     final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<>(256);
+
+    private static String[] tokenizeToStringArray(String str, String delimiters,
+                                                  boolean trimTokens, boolean ignoreEmptyTokens) {
+        if (str == null) {
+            return new String[0];
+        }
+        StringTokenizer st = new StringTokenizer(str, delimiters);
+        List<String> tokens = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if (trimTokens) {
+                token = token.trim();
+            }
+            if (!ignoreEmptyTokens || token.length() > 0) {
+                tokens.add(token);
+            }
+        }
+        return tokens.toArray(new String[0]);
+    }
 
 
     /**
@@ -407,7 +428,7 @@ public class AntPathMatcher implements PathMatcher {
      * @return the tokenized path parts
      */
     protected String[] tokenizePath(String path) {
-        return StringUtils.tokenizeToStringArray(path, this.pathSeparator, this.trimTokens, true);
+        return tokenizeToStringArray(path, this.pathSeparator, this.trimTokens, true);
     }
 
     /**
@@ -472,8 +493,8 @@ public class AntPathMatcher implements PathMatcher {
      */
     @Override
     public String extractPathWithinPattern(String pattern, String path) {
-        String[] patternParts = StringUtils.tokenizeToStringArray(pattern, this.pathSeparator, this.trimTokens, true);
-        String[] pathParts = StringUtils.tokenizeToStringArray(path, this.pathSeparator, this.trimTokens, true);
+        String[] patternParts = tokenizeToStringArray(pattern, this.pathSeparator, this.trimTokens, true);
+        String[] pathParts = tokenizeToStringArray(path, this.pathSeparator, this.trimTokens, true);
         StringBuilder builder = new StringBuilder();
         boolean pathStarted = false;
 
@@ -533,13 +554,13 @@ public class AntPathMatcher implements PathMatcher {
      */
     @Override
     public String combine(String pattern1, String pattern2) {
-        if (!StringUtils.hasText(pattern1) && !StringUtils.hasText(pattern2)) {
+        if (!StringUtils.isNotBlank(pattern1) && !StringUtils.isNotBlank(pattern2)) {
             return "";
         }
-        if (!StringUtils.hasText(pattern1)) {
+        if (!StringUtils.isNotBlank(pattern1)) {
             return pattern2;
         }
-        if (!StringUtils.hasText(pattern2)) {
+        if (!StringUtils.isNotBlank(pattern2)) {
             return pattern1;
         }
 

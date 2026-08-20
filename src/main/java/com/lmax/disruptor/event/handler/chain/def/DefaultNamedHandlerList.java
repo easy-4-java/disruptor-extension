@@ -102,7 +102,7 @@ public class DefaultNamedHandlerList implements NamedHandlerList<DisruptorEvent>
 	 */
 	@Override
 	public HandlerChain<DisruptorEvent> proxy(HandlerChain<DisruptorEvent> handlerChain) {
-		return new ProxiedHandlerChain((ProxiedHandlerChain) handlerChain, this);
+		return new ProxiedHandlerChain(handlerChain, this);
 	}
 
 	/** {@inheritDoc} */

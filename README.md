@@ -4,8 +4,10 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://github.com/easy-4-java/disruptor-extension) [![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-> LMAX Disruptor extensions for the JDK 8 line: handler chains, event dispatcher,
-> publishing template, `@EventRule` routing and thread/wait-strategy factories.
+> LMAX Disruptor extension library: handler chains, event dispatcher, publishing template,
+> `@EventRule` routing, and thread/wait-strategy factories. Three maintained lines:
+> `feature/1.0.x` (JDK 8 + Disruptor 3.4.4), `feature/2.0.x` (JDK 17 + Disruptor 3.4.4),
+> and `feature/3.0.x` (JDK 21 + Disruptor 4.0.0).
 
 ## Table of Contents
 
@@ -102,17 +104,17 @@ What it is **not**:
 
 | Requirement | Version / Notes |
 | :--- | :--- |
-| JDK | 21+ |
-| Maven | 3.0+ (enforced; Maven Wrapper `./mvnw` included) |
-| LMAX Disruptor | `com.lmax:disruptor` 3.4.4 (managed by this pom) |
+| JDK | 21+ (current `feature/3.0.x` branch; see matrix below for other lines) |
+| Maven | 4.0+ (enforced; project uses Maven 4.1.0 modelVersion) |
+| LMAX Disruptor | `com.lmax:disruptor` 4.0.0 on the 3.0.x line; 3.4.4 on 1.0.x / 2.0.x |
 
-Version lines:
+Version-line matrix:
 
-| Branch | JDK | Version |
-| :--- | :--- | :--- |
-| `feature/1.0.x` | 8 | `1.0.x.*` |
-| `feature/2.0.x` | 17 | `2.0.x.*` |
-| `feature/3.0.x` | 21 | `3.0.x.*` |
+| Branch | JDK | Bytecode | Current SNAPSHOT | Disruptor | Compile flags |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `feature/1.0.x` | 8 | 52 | `1.0.x.20260630-SNAPSHOT` | 3.4.4 (`javax.ws.rs` namespace) | `maven.compiler.source/target = 1.8` |
+| `feature/2.0.x` | 17 | 61 | `2.0.x.20260630-SNAPSHOT` | 3.4.4 | `maven.compiler.release = 17` + `--add-opens` |
+| `feature/3.0.x` | 21 | 65 | `3.0.x.20260630-SNAPSHOT` | 4.0.0 (`jakarta.ws.rs` namespace) | `maven.compiler.release = 21` + `--add-opens` |
 
 ## 4. Architecture & Modules
 
@@ -437,36 +439,21 @@ System.out.println(event.getRouteExpression()); // "prod/order/created"
 
 ## 10. Versioning & Branches
 
-| Branch | JDK | Version | Notes |
+| Branch | JDK | Current SNAPSHOT | Notes |
 | :--- | :--- | :--- | :--- |
-| `feature/1.0.x` | 8 | `1.0.x.*` | Current branch, JDK 8 baseline, maintained |
-| `feature/2.0.x` | 17 | `2.0.x.*` | JDK 17 line |
-| `feature/3.0.x` | 21 | `3.0.x.*` | JDK 21 line |
+| `feature/1.0.x` | 8 | `1.0.x.20260630-SNAPSHOT` | JDK 8 baseline (`source/target=1.8`, Disruptor 3.4.4), maintained LTS |
+| `feature/2.0.x` | 17 | `2.0.x.20260630-SNAPSHOT` | JDK 17 baseline (`release=17`, Disruptor 3.4.4), maintained LTS |
+| `feature/3.0.x` | 21 | `3.0.x.20260630-SNAPSHOT` | **Current branch.** JDK 21 baseline (`release=21`, Disruptor 4.0.0), active development line |
 
-Maintenance policy: the `1.0.x` line receives bug fixes and compatibility updates
-for the JDK 8 baseline. New features targeting newer JDKs land on the `2.0.x` /
-`3.0.x` lines. Releases are published to the Aliyun Maven repository and as
-GitHub Releases; the project is not yet published to Maven Central.
+Maintenance policy: bug fixes and security patches are merged bottom-up from
+1.0.x → 2.0.x → 3.0.x. New JDK-21-era features land first on `feature/3.0.x` and
+are selectively back-ported where compatible. Releases go to the Aliyun Maven
+repository and GitHub Releases; the project is not yet published to Maven Central.
 
 ## 11. Contributing & License
 
 Contributions are welcome — please open issues or pull requests on GitHub.
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
-
-## 12. Bug Fixes & Quality Improvements
-
-The following issues, identified through a CodeGraph semantic audit, have been
-addressed in this release. Each entry describes the original defect, its
-impact, and the concrete fix applied.
-
-| # | Severity | File | Description / Fix |
-|---|---|---|---|
-| 1 | Medium | [DisruptorTemplate.java](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/src/main/java/com/lmax/disruptor/DisruptorTemplate.java#L82-L110) | **messageId collision on high concurrency.** Both `publishEvent(String, String, Object)` and `publishEvent(String, String, String, Object)` previously left the message ID unset or used `System.currentTimeMillis()` — a millisecond-resolution clock that yields identical IDs for events published inside the same tick. **Fix:** both overloads now assign `UUID.randomUUID().toString()`, guaranteeing unique IDs even under saturation bursts. |
-| 2 | Medium | [EventHandleException.java](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/src/main/java/com/lmax/disruptor/exception/EventHandleException.java#L35-L48) | **Lost cause stack-trace in `EventHandleException(Exception)` constructor.** The single-argument constructor called `super(e.getMessage(), null)`, which discarded the underlying exception — breaking stack-trace navigation in log aggregators and APM tools. **Fix:** constructor now calls `super(e.getMessage(), e)` so the original checked exception is preserved via `getCause()`. |
-| 3 | 🔴 High | [pom.xml](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/pom.xml#L297-L300) | **JaCoCo coverage never actually measured.** `maven-surefire-plugin` declared its own `<argLine>` without the `@{argLine}` placeholder used by `jacoco-maven-plugin` to inject the `-javaagent` flag into the test JVM. Coverage reports therefore showed 0% instrumentation even when tests ran. **Fix:** prepended `@{argLine}` so Surefire merges JaCoCo's agent arguments with the existing `-Xmx1024m -Dfile.encoding=UTF-8`. |
-| 4 | Low | [pom.xml](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/pom.xml#L45-L52) | **Unused `commons-lang.version = 2.6` property.** The property referenced the *old* `commons-lang:commons-lang` artifact (2.x line) that has never been on the classpath; only the actively-used `commons-lang3.version = 3.20.0` (`org.apache.commons:commons-lang3`) is required. **Fix:** removed the dangling property to eliminate confusion. |
-| 5 | Low | `thread/` + `event.factory/` | **Dual ThreadFactory design & no business-name prefix.** `DisruptorThreadFactory` (enum-based) and `DisruptorEvent*ThreadFactory` (concrete classes in `event.factory/`) provide overlapping naming strategies. Consumers cannot inject their own prefix to distinguish pools across multiple `DisruptorTemplate` instances in the same JVM. **Status:** tracked as a follow-up enhancement; a builder accepting a `namePrefix + index` pair is planned for a future minor release. |
-| 6 | Low | `ProxiedHandlerChain` | **`currentPosition` cursor assumes single-consumer model.** The nested-iterator cursor held inside the chain is not thread-safe and is designed for the same single `EventHandler` thread that the Disruptor lifecycle drives. Reusing the same chain instance across multiple dispatchers produces undefined ordering. **Fix (documentation):** the design constraint is now explicitly stated in this README and in [§5 Appendix of the Architecture document](file:///Users/wandl/workspaces/workspace-github-easy-4-java/disruptor-extension/product-docs/disruptor-extension/8%E3%80%81disruptor-extension-Architecture.md#5-appendix-core-file-index--design-notes). |
 
 

@@ -17,7 +17,7 @@ package com.lmax.disruptor.event.translator;
 
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.event.DisruptorEvent;
-import com.lmax.disruptor.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * {@link EventTranslatorOneArg} implementation that copies all fields from a
@@ -46,7 +46,7 @@ public class DisruptorEventOneArgTranslator implements EventTranslatorOneArg<Dis
 		event.setTopic(bind.getTopic());
 		event.setNamespace(bind.getNamespace());
 		event.setTag(bind.getTag());
-		event.setMessageId(StringUtils.hasText(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
+		event.setMessageId(StringUtils.isNotBlank(bind.getMessageId()) ? bind.getMessageId() : String.valueOf(sequence));
 		event.setPayload(bind.getPayload());
 		event.setSequence(sequence);
 	}
