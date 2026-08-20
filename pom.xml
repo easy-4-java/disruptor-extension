@@ -59,7 +59,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Dependency versions -->
         <checker-qual.version>3.48.3</checker-qual.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <disruptor.version>3.4.4</disruptor.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <junit.version>4.13.2</junit.version>
