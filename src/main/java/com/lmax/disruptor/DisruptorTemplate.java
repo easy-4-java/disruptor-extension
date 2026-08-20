@@ -19,6 +19,8 @@ package com.lmax.disruptor;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.event.DisruptorEvent;
 
+import java.util.UUID;
+
 /**
  * Convenience template that wraps a {@link Disruptor} and an
  * {@link EventTranslatorOneArg} to simplify publishing
@@ -67,7 +69,11 @@ public class DisruptorTemplate {
 
 	/**
 	 * Creates a new {@link DisruptorEvent} with the given topic, tag, and
-	 * payload, then publishes it to the ring buffer.
+	 * payload, then publishes it to the ring buffer. A unique message
+	 * identifier based on {@link UUID} is assigned automatically so that
+	 * consumers can correlate events even under high-concurrency bursts
+	 * where multiple events are published within the same wall-clock
+	 * millisecond.
 	 *
 	 * @param topic   the event topic
 	 * @param tag     the event tag
@@ -78,13 +84,16 @@ public class DisruptorTemplate {
 		bindEvent.setTopic(topic);
 		bindEvent.setTag(tag);
 		bindEvent.setPayload(payload);
+		bindEvent.setMessageId(UUID.randomUUID().toString());
 		disruptor.publishEvent(oneArgEventTranslator, bindEvent);
 	}
 
 	/**
 	 * Creates a new {@link DisruptorEvent} with the given topic, namespace,
-	 * tag, and payload, then publishes it to the ring buffer. The message
-	 * identifier is set to the current system time in milliseconds.
+	 * tag, and payload, then publishes it to the ring buffer. A unique
+	 * message identifier based on {@link UUID} is assigned automatically,
+	 * avoiding the high-concurrency collisions that would occur if a
+	 * millisecond-resolution wall-clock timestamp were used as the ID.
 	 *
 	 * @param topic     the event topic
 	 * @param namespace the event namespace
@@ -97,7 +106,7 @@ public class DisruptorTemplate {
 		bindEvent.setNamespace(namespace);
 		bindEvent.setTag(tag);
 		bindEvent.setPayload(payload);
-		bindEvent.setMessageId(String.valueOf(System.currentTimeMillis()));
+		bindEvent.setMessageId(UUID.randomUUID().toString());
 		disruptor.publishEvent(oneArgEventTranslator, bindEvent);
 	}
 

@@ -29,20 +29,23 @@ public class EventHandleException extends RuntimeException {
 
     /**
      * Constructs a new exception wrapping the given checked exception.
+     * The original exception is preserved as the {@linkplain #getCause() cause}
+     * so that handler chains and upper layers can inspect the full stack trace.
      *
-     * @param e the original exception
+     * @param e the original exception (must not be {@code null})
      */
     public EventHandleException(Exception e) {
-        super(e.getMessage(), null);
+        super(e.getMessage(), e);
     }
 
     /**
-     * Constructs a new exception with the specified detail message.
+     * Constructs a new exception with the specified detail message and no
+     * underlying cause.
      *
      * @param errorMessage the detail message
      */
     public EventHandleException(String errorMessage) {
-        super(errorMessage, null);
+        super(errorMessage);
     }
 
     /**
