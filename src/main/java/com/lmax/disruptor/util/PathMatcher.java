@@ -24,7 +24,7 @@ import java.util.Map;
  * <p>The default implementation is {@link AntPathMatcher}, supporting the
  * Ant-style pattern syntax.</p>
  *
- * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  * @since 3.0.0
  * @see AntPathMatcher
  */
